@@ -1,1 +1,1 @@
-export { test, expect } from './framework-fixtures';
+export { test, expect } from './page-object-fixtures';

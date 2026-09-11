@@ -10,13 +10,18 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: config.retries,
   workers: config.workers,
-  reporter: [['list'], ['html']],
+  reporter: [
+    ['list'],
+    ['html'],
+    ['allure-playwright', { resultsDir: 'allure-results' }],
+  ],
   use: {
     baseURL: config.appUrl,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: config.timeout,
+    testIdAttribute: 'data-qa',
   },
   projects,
 });

@@ -4,6 +4,11 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   test:
     timeout-minutes: 60
@@ -19,8 +24,9 @@ jobs:
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
         env:
-          APP_URL: https://playwright.dev
-          API_URL: https://playwright.dev
+          APP_URL: https://automationexercise.com
+          API_URL: https://automationexercise.com/api
+          PW_WORKERS: 10
         run: pnpm exec playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -28,3 +34,43 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 30
+
+  # Builds and publishes the Allure report on every push to main/master,
+  # win or lose - a run that failed is exactly the one someone wants to
+  # see, not one that vanishes because the job that produced it went red.
+  publish-report:
+    needs: test
+    if: ${{ !cancelled() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm install -g pnpm && pnpm install
+      - uses: actions/download-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+      - name: Generate Allure report
+        run: pnpm exec allure generate ./allure-results --clean -o ./allure-report
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+      - id: deployment
+        uses: actions/deploy-pages@v4
