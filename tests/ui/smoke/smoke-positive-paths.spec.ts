@@ -1,4 +1,4 @@
-import { expect, test } from '../../src/fixtures/base-test';
+import { expect, test } from '../../../src/fixtures/base-test';
 
 /**
  * The fast, broad check: does each top-level page still load and show

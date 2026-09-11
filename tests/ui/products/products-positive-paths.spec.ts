@@ -1,5 +1,5 @@
-import { expect, test } from '../../src/fixtures/base-test';
-import { KNOWN_PRODUCT, SEARCH_TERM } from '../../src/data/catalog';
+import { expect, test } from '../../../src/fixtures/base-test';
+import { KNOWN_PRODUCT, SEARCH_TERM } from '../../../src/data/catalog';
 
 test.describe('Products', { tag: '@regression' }, () => {
   test('TC-04: Verify that the user sees a Searched Products heading and results after searching', async ({

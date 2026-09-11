@@ -1,5 +1,5 @@
-import { expect, test } from '../../src/fixtures/base-test';
-import { generateContactMessage } from '../../src/data/contact-message';
+import { expect, test } from '../../../src/fixtures/base-test';
+import { generateContactMessage } from '../../../src/data/contact-message';
 
 test.describe('Contact us', { tag: '@regression' }, () => {
   test('TC-10: Verify that the user sees a success banner after submitting the contact form', async ({

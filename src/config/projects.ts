@@ -6,8 +6,17 @@ export const projects: Project[] = [
     testMatch: /.*\.setup\.ts/,
   },
 
+  // The suite root (`testDir: './tests'`, set globally in playwright.config.ts)
+  // now holds three sibling trees - tests/ui, tests/api, tests/vr - so every
+  // browser project below pins testDir to tests/ui explicitly. Without it,
+  // Playwright's default testMatch would also pick up tests/api/**/*.spec.ts
+  // and tests/vr/**/*.spec.ts here, running API and visual-regression specs
+  // across all five browser/device combinations instead of the dedicated
+  // project each of those suites needs once they exist.
+
   {
     name: 'chromium',
+    testDir: './tests/ui',
     use: {
       ...devices['Desktop Chrome'],
     },
@@ -15,6 +24,7 @@ export const projects: Project[] = [
 
   {
     name: 'firefox',
+    testDir: './tests/ui',
     use: {
       ...devices['Desktop Firefox'],
     },
@@ -22,6 +32,7 @@ export const projects: Project[] = [
 
   {
     name: 'webkit',
+    testDir: './tests/ui',
     use: {
       ...devices['Desktop Safari'],
     },
@@ -29,6 +40,7 @@ export const projects: Project[] = [
 
   {
     name: 'mobile-chrome',
+    testDir: './tests/ui',
     use: {
       ...devices['Pixel 5'],
     },
@@ -36,6 +48,7 @@ export const projects: Project[] = [
 
   {
     name: 'mobile-safari',
+    testDir: './tests/ui',
     use: {
       ...devices['iPhone 13'],
     },
@@ -52,6 +65,7 @@ export const projects: Project[] = [
     // accumulating quantities between runs (a "3" coming back "5"). No spec
     // needs a logged-in session yet; name one *.authenticated.spec.ts here
     // once one does.
+    testDir: './tests/ui',
     testMatch: /.*\.authenticated\.spec\.ts$/,
     dependencies: ['setup'],
     use: {

@@ -1,5 +1,5 @@
-import { expect, test } from '../../src/fixtures/base-test';
-import { KNOWN_PRODUCT } from '../../src/data/catalog';
+import { expect, test } from '../../../src/fixtures/base-test';
+import { KNOWN_PRODUCT } from '../../../src/data/catalog';
 
 test.describe('Cart', { tag: '@regression' }, () => {
   test('TC-08: Verify that the user sees an empty cart on a fresh session with no prior activity', async ({

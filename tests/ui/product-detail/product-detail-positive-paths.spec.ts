@@ -1,5 +1,5 @@
-import { expect, test } from '../../src/fixtures/base-test';
-import { KNOWN_PRODUCT } from '../../src/data/catalog';
+import { expect, test } from '../../../src/fixtures/base-test';
+import { KNOWN_PRODUCT } from '../../../src/data/catalog';
 
 test.describe('Product detail', { tag: '@regression' }, () => {
   test('TC-06: Verify that the user sees a confirmation modal with a link to the cart after adding a product', async ({
