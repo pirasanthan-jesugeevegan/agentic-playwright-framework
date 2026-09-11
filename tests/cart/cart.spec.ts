@@ -28,7 +28,7 @@ test.describe('Cart', { tag: '@regression' }, () => {
     });
 
     await test.step('THEN the cart reports empty again', async () => {
-      await cartPage.expectEmpty();
+      await expect(cartPage.emptyCartMessage).toBeVisible();
     });
   });
 });

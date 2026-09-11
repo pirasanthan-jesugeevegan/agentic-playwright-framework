@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 import { BaseAppPage } from './base-app-page';
 export class CartPage extends BaseAppPage {
   readonly emptyCartMessage: Locator;
@@ -26,8 +26,5 @@ export class CartPage extends BaseAppPage {
   }
   async isEmpty(): Promise<boolean> {
     return this.emptyCartMessage.isVisible();
-  }
-  async expectEmpty(): Promise<void> {
-    await expect(this.emptyCartMessage).toBeVisible();
   }
 }
