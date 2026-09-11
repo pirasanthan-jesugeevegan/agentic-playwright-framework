@@ -6,7 +6,7 @@ import path from 'node:path';
 
 const authFile = path.resolve('.auth', 'user.json');
 
-setup('authenticate', async ({ page }) => {
+setup('authenticate', async () => {
   await mkdir(path.dirname(authFile), {
     recursive: true,
   });
