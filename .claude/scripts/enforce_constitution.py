@@ -34,47 +34,88 @@ def added_content(tool_name, tool_input):
     return ""
 
 
-def describe_missing_tag(content):
+def describe_missing_tag(content, rel_path):
     for line in content.splitlines():
         if re.search(r"test\.describe\(", line) and "tag:" not in line:
             return True
     return False
 
 
-# Each rule: (path_pattern, check(content) -> bool, message)
+def bad_spec_titles(content, rel_path):
+    """Every top-level test() title must open with 'Verify that', an
+    optional 'TC-09: ' / 'VR-01: ' plan-case-id prefix allowed in front
+    of it. Matches only a bare test( call - test.step(/test.describe(/
+    test.beforeEach( all have a '.' right after 'test' so \\btest\\(
+    doesn't match them."""
+    for m in re.finditer(r"\btest\(\s*['\"`]([^'\"`]*)", content):
+        title = m.group(1)
+        if title and not re.match(r"^(?:[A-Za-z]{2,}-\d+:\s*)?Verify that", title):
+            return True
+    return False
+
+
+def bad_ui_spec_name(content, rel_path):
+    return not re.search(r"-(positive|negative)-paths\.spec\.tsx?$", rel_path)
+
+
+def bad_api_spec_name(content, rel_path):
+    return not re.search(
+        r"-(positive|negative|schema-validation)-paths\.spec\.tsx?$", rel_path
+    )
+
+
+# Each rule: (path_pattern, check(content, rel_path) -> bool, message)
 RULES = [
     (
-        r"^(src|tests)/.*\.tsx?$",
-        lambda c: "waitForTimeout(" in c,
+        r"^(src|tests|api-tests)/.*\.tsx?$",
+        lambda c, p: "waitForTimeout(" in c,
         "waitForTimeout() is a hard wait - use a web-first assertion, "
         ".waitFor(), or fix the real race instead.",
     ),
     (
-        r"^(src|tests)/.*\.tsx?$",
-        lambda c: bool(re.search(r"""xpath=|locator\(\s*['"`]//""", c)),
+        r"^(src|tests|api-tests)/.*\.tsx?$",
+        lambda c, p: bool(re.search(r"""xpath=|locator\(\s*['"`]//""", c)),
         "XPath locator - use getByRole/getByTestId, or a documented CSS "
         "fallback if neither exists on the element.",
     ),
     (
         r"^src/pages/.*\.tsx?$",
-        lambda c: bool(re.search(r"\bexpect\(", c)),
+        lambda c, p: bool(re.search(r"\bexpect\(", c)),
         "Page objects don't assert - expose the locator/action and let "
         "the spec (or setup script) hold the expect().",
     ),
     (
-        r"^tests/.*\.spec\.tsx?$",
+        r"^(tests|api-tests)/.*\.spec\.tsx?$",
         describe_missing_tag,
         "test.describe(...) needs a tag: ('@smoke' or '@regression') "
         "inline, inherited by every test inside it.",
     ),
     (
-        r"^tests/.*\.spec\.tsx?$",
-        lambda c: bool(
-            re.search(r"""from\s+['"]@playwright/test['"]""", c)
-        ),
+        r"^(tests|api-tests)/.*\.spec\.tsx?$",
+        lambda c, p: bool(re.search(r"""from\s+['"]@playwright/test['"]""", c)),
         "Specs import test/expect from src/fixtures/base-test, not "
         "@playwright/test directly - that's how page-object fixtures "
         "get injected.",
+    ),
+    (
+        r"^tests/.*\.spec\.tsx?$",
+        bad_ui_spec_name,
+        "UI spec files must be named <area>-positive-paths.spec.ts or "
+        "<area>-negative-paths.spec.ts - one file per path, never mixed.",
+    ),
+    (
+        r"^api-tests/.*\.spec\.tsx?$",
+        bad_api_spec_name,
+        "API spec files must be named <area>-positive-paths.spec.ts, "
+        "<area>-negative-paths.spec.ts, or (except GET/DELETE, which carry "
+        "no body) <area>-schema-validation-paths.spec.ts.",
+    ),
+    (
+        r"^(tests|api-tests)/.*\.spec\.tsx?$",
+        bad_spec_titles,
+        "Every test() title must start with \"Verify that the user\" (or "
+        "\"Verify that the API\" for an API-only case) - optionally "
+        "prefixed with the plan's case ID, e.g. 'TC-09: Verify that ...'.",
     ),
 ]
 
@@ -104,7 +145,7 @@ def main():
 
     violations = []
     for path_pattern, check, message in RULES:
-        if re.search(path_pattern, rel_path) and check(content):
+        if re.search(path_pattern, rel_path) and check(content, rel_path):
             violations.append(message)
 
     if violations:
