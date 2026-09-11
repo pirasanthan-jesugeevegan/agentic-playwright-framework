@@ -2,7 +2,9 @@ import { expect, test } from '../../src/fixtures/base-test';
 import { KNOWN_PRODUCT } from '../../src/data/catalog';
 
 test.describe('Cart', { tag: '@regression' }, () => {
-  test('a fresh session starts with an empty cart', async ({ cartPage }) => {
+  test('TC-08: Verify that the user sees an empty cart on a fresh session with no prior activity', async ({
+    cartPage,
+  }) => {
     await test.step('GIVEN a visitor with no prior activity opens the cart', async () => {
       await cartPage.open();
     });
@@ -12,7 +14,7 @@ test.describe('Cart', { tag: '@regression' }, () => {
     });
   });
 
-  test('removing the only item returns the cart to its empty state', async ({
+  test('TC-09: Verify that the user sees the cart return to its empty state after removing the only item', async ({
     productDetailPage,
     cartPage,
   }) => {

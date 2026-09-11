@@ -2,7 +2,7 @@ import { expect, test } from '../../src/fixtures/base-test';
 import { KNOWN_PRODUCT } from '../../src/data/catalog';
 
 test.describe('Product detail', { tag: '@regression' }, () => {
-  test('adding to cart opens the confirmation modal with a link to the cart', async ({
+  test('TC-06: Verify that the user sees a confirmation modal with a link to the cart after adding a product', async ({
     productDetailPage,
   }) => {
     await test.step(`GIVEN a visitor is viewing product #${KNOWN_PRODUCT.id}`, async () => {
@@ -22,7 +22,7 @@ test.describe('Product detail', { tag: '@regression' }, () => {
     });
   });
 
-  test('the chosen quantity carries through to the cart', async ({
+  test('TC-07: Verify that the user sees the chosen quantity carried through to the cart', async ({
     productDetailPage,
     cartPage,
   }) => {

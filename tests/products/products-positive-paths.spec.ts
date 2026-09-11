@@ -2,7 +2,7 @@ import { expect, test } from '../../src/fixtures/base-test';
 import { KNOWN_PRODUCT, SEARCH_TERM } from '../../src/data/catalog';
 
 test.describe('Products', { tag: '@regression' }, () => {
-  test('searching returns a Searched Products heading and results', async ({
+  test('TC-04: Verify that the user sees a Searched Products heading and results after searching', async ({
     productsPage,
   }) => {
     await test.step('GIVEN a visitor is on the products page', async () => {
@@ -22,7 +22,7 @@ test.describe('Products', { tag: '@regression' }, () => {
     });
   });
 
-  test('the View Product link opens the matching product detail page', async ({
+  test('TC-05: Verify that the user is taken to the matching product detail page via the View Product link', async ({
     productsPage,
     productDetailPage,
   }) => {
