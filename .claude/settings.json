@@ -11,5 +11,31 @@
         ]
       }
     ]
+  },
+  "enabledMcpjsonServers": ["playwright-test", "playwright"],
+  "permissions": {
+    "allow": [
+      "Bash(pnpm test)",
+      "Bash(pnpm test:smoke)",
+      "Bash(pnpm test:ui)",
+      "Bash(pnpm test:headed)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm format:check)",
+      "Bash(pnpm validate)",
+      "mcp__playwright-test__browser_navigate",
+      "mcp__playwright-test__browser_snapshot",
+      "mcp__playwright-test__browser_click",
+      "mcp__playwright-test__browser_type",
+      "mcp__playwright-test__browser_evaluate",
+      "mcp__playwright-test__planner_setup_page",
+      "mcp__playwright-test__planner_save_plan",
+      "mcp__playwright-test__generator_setup_page",
+      "mcp__playwright-test__generator_read_log",
+      "mcp__playwright-test__generator_write_test",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_evaluate"
+    ]
   }
 }
