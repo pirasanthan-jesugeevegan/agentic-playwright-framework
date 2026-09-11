@@ -64,16 +64,23 @@ def bad_api_spec_name(content, rel_path):
     )
 
 
+def bad_vr_spec_name(content, rel_path):
+    return not re.search(r"\.vr\.spec\.tsx?$", rel_path)
+
+
 # Each rule: (path_pattern, check(content, rel_path) -> bool, message)
+# tests/ holds three sibling trees - tests/ui, tests/api, tests/vr - so the
+# generic rules below gate on all of `tests/`, and the naming rules gate on
+# each tree individually since each has its own filename convention.
 RULES = [
     (
-        r"^(src|tests|api-tests)/.*\.tsx?$",
+        r"^(src|tests)/.*\.tsx?$",
         lambda c, p: "waitForTimeout(" in c,
         "waitForTimeout() is a hard wait - use a web-first assertion, "
         ".waitFor(), or fix the real race instead.",
     ),
     (
-        r"^(src|tests|api-tests)/.*\.tsx?$",
+        r"^(src|tests)/.*\.tsx?$",
         lambda c, p: bool(re.search(r"""xpath=|locator\(\s*['"`]//""", c)),
         "XPath locator - use getByRole/getByTestId, or a documented CSS "
         "fallback if neither exists on the element.",
@@ -85,33 +92,38 @@ RULES = [
         "the spec (or setup script) hold the expect().",
     ),
     (
-        r"^(tests|api-tests)/.*\.spec\.tsx?$",
+        r"^tests/.*\.spec\.tsx?$",
         describe_missing_tag,
         "test.describe(...) needs a tag: ('@smoke' or '@regression') "
         "inline, inherited by every test inside it.",
     ),
     (
-        r"^(tests|api-tests)/.*\.spec\.tsx?$",
+        r"^tests/.*\.spec\.tsx?$",
         lambda c, p: bool(re.search(r"""from\s+['"]@playwright/test['"]""", c)),
         "Specs import test/expect from src/fixtures/base-test, not "
         "@playwright/test directly - that's how page-object fixtures "
         "get injected.",
     ),
     (
-        r"^tests/.*\.spec\.tsx?$",
+        r"^tests/ui/.*\.spec\.tsx?$",
         bad_ui_spec_name,
         "UI spec files must be named <area>-positive-paths.spec.ts or "
         "<area>-negative-paths.spec.ts - one file per path, never mixed.",
     ),
     (
-        r"^api-tests/.*\.spec\.tsx?$",
+        r"^tests/api/.*\.spec\.tsx?$",
         bad_api_spec_name,
         "API spec files must be named <area>-positive-paths.spec.ts, "
         "<area>-negative-paths.spec.ts, or (except GET/DELETE, which carry "
         "no body) <area>-schema-validation-paths.spec.ts.",
     ),
     (
-        r"^(tests|api-tests)/.*\.spec\.tsx?$",
+        r"^tests/vr/.*\.spec\.tsx?$",
+        bad_vr_spec_name,
+        "Visual regression spec files must be named <area>.vr.spec.ts.",
+    ),
+    (
+        r"^tests/.*\.spec\.tsx?$",
         bad_spec_titles,
         "Every test() title must start with \"Verify that the user\" (or "
         "\"Verify that the API\" for an API-only case) - optionally "
