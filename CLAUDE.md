@@ -28,13 +28,28 @@ Live report: https://pirasanthan-jesugeevegan.github.io/agentic-playwright-frame
 
 ```
 src/
-  pages/    Page objects. BaseAppPage carries shared header chrome; each page extends it.
-  fixtures/ Dependency-injected page-object fixtures + the ad-blocking network fixture
-  data/     Test data generators/seeds - never hardcoded inline in a spec
-  config/   Environment + project (browser matrix) configuration
-tests/      One directory per feature area; specs import from src/fixtures/base-test
-.claude/    Agent roles, the constitution-enforcement hook, MCP-backed exploration
-docs/       Agent workflows playbook, decision log
+  pages/       Page objects. BaseAppPage carries shared header chrome; each page extends it.
+  fixtures/    Dependency-injected page-object fixtures + the ad-blocking network fixture
+  data/        Test data generators/seeds - never hardcoded inline in a spec
+  config/      Environment + project (browser matrix) configuration
+tests/         UI E2E specs, one directory per feature area. Two files per area:
+               <area>-positive-paths.spec.ts and <area>-negative-paths.spec.ts.
+               Specs import from src/fixtures/base-test.
+vr-tests/      Visual regression specs (planned - see docs/STATUS.md). One
+               <area>.vr.spec.ts per area; see .claude/skills/playwright-visual-regression/.
+api-tests/     API specs (planned - see docs/STATUS.md). Up to three files per feature:
+               -positive-paths / -negative-paths / -schema-validation-paths (GET and
+               DELETE carry no body, so they skip the schema-validation file).
+docs/          The plan-before-code artifact - not app documentation. STATUS.md is the
+               coverage tracker and cap; test-plans/<area>-test-plan.md is written and
+               reviewed *before* a single line of test code, one plan per feature area.
+.claude/
+  agents/      The 5 specialist roles - see Agent system below
+  commands/    Slash commands (/plan, /implement, /review, /heal, /cycle, /coverage,
+               /triage, /baseline) - each delegates to one agent with a fixed brief
+  skills/      Coding standards the agents (and a human) follow: page-object testing,
+               visual regression, live MCP exploration
+  scripts/     enforce_constitution.py, the mechanical PreToolUse hook
 .github/workflows/  CI: install -> test (6 projects) -> publish-report to GitHub Pages
 ```
 
@@ -46,6 +61,8 @@ These aren't suggestions - every change, human- or agent-authored, is checked ag
 - **No hard waits.** No `waitForTimeout`. Web-first assertions (`expect(locator).toBeVisible()`, etc.), `.waitFor()`, and Playwright's own auto-waiting do the synchronising.
 - **Given/When/Then.** Every test body is structured with `test.step()`, one step per phase.
 - **One tag per feature area** - `@smoke` or `@regression` - declared once on `test.describe(...)`, inherited by every test inside it. Not scattered per-`test()` call, and never both.
+- **One path per spec file.** Every UI feature/page gets exactly two spec files: `<area>-positive-paths.spec.ts` (the happy paths) and `<area>-negative-paths.spec.ts` (edge/error cases). An API feature/page gets up to three: those same two, plus `<area>-schema-validation-paths.spec.ts` exercising the different request-body shapes a `POST`/`PUT`/`PATCH` endpoint accepts and rejects - `GET` and `DELETE` carry no body, so they're exempt from the third file. A case never moves suite by getting shoved into the wrong file; a positive case that belongs in `-negative-paths` is misplanned, not miscoded.
+- **Test titles state the outcome as a claim.** Every `test()` title starts with `Verify that the user` (`Verify that the API` reads fine for a purely API-facing case), optionally prefixed with the plan's case ID - `'TC-09: Verify that the user sees the cart return to its empty state after removing the only item'`. Not a mechanism description, not a fragment.
 - **Page objects don't assert.** They expose locators, actions, and readiness waits (`.waitFor()`); specs hold the `expect()`s. (`login-page.ts` used to break this - `login()` called `expect(...).toBeVisible()` internally; fixed to `.waitFor({ state: 'visible' })`, an example of exactly what the review/enforcement layers below exist to catch.)
 - **Test data is generated, not copy-pasted.** Anything unique per run (emails, messages) comes from `src/data/`; anything that mirrors real catalog state is a seed, dated and labelled as one, not a magic literal.
 
@@ -60,17 +77,17 @@ A flaky test is a defect, not weather.
 
 ## Agent system
 
-This suite is authored and maintained with an AI coding agent operating under this file and the role definitions in `.claude/agents/`. Every change is reviewed and committed by a human - nothing lands without that review. `docs/agent-workflows.md` maps common requests to the exact agent/phase sequence that handles them.
+This suite is authored and maintained with an AI coding agent operating under this file, the role definitions in `.claude/agents/`, and the slash commands in `.claude/commands/` that invoke them with a fixed brief. Every change is reviewed and committed by a human - nothing lands without that review.
 
-| Agent                           | Role                                                                                                         |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `playwright-test-manager`       | Owns scope for a feature area: routes to the right agent, enforces the caps below, runs the cycle end to end |
-| `playwright-test-planner`       | Explores the live app over MCP, writes a plan (`docs/plans/<area>-plan.md`) before any code                  |
-| `playwright-page-object-author` | Implements one case at a time from a plan: page object first, then the spec that uses it                     |
-| `ci-failure-triage`             | Root-causes a red CI run from its report/logs before proposing any fix                                       |
-| `playwright-test-reviewer`      | Read-only convention audit against this file, before a human commits                                         |
+| Agent                       | Role                                                                                                              | Invoked by                                    |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `playwright-test-manager`   | Owns scope: looks before creating, runs W1-W4 (coverage request / new case / red run / stale case), holds the cap | `/cycle`, `/coverage`, `/triage`, `/baseline` |
+| `playwright-test-planner`   | Explores the live app over MCP, writes a plan (`docs/test-plans/<area>-test-plan.md`) before any code             | `/plan`                                       |
+| `playwright-test-generator` | Implements one case at a time from a plan: page object first, then the spec that uses it                          | `/implement`                                  |
+| `playwright-test-healer`    | Root-causes a failing test or a red CI run before proposing any fix - diagnose, don't guess                       | `/heal`, `/triage`, `/baseline`               |
+| `playwright-test-reviewer`  | Read-only convention audit against this file and `.claude/skills/`, before a human commits                        | `/review`                                     |
 
-Coverage stays deliberate: a feature area extends past roughly a dozen cases only with a stated reason, not by default - twenty cases that can each be justified beat two hundred nobody can explain.
+Coverage stays deliberate: `docs/STATUS.md` holds a hard cap (functional: 15, currently 10) - a suite extends past it only with an explicit swap, named and justified, never by default. Visual regression and API suites get their own caps once they exist.
 
 ## Live exploration (MCP)
 
@@ -80,6 +97,8 @@ Coverage stays deliberate: a feature area extends past roughly a dozen cases onl
 - **`playwright`** - the general-purpose browser MCP (`npx @playwright/mcp@latest`), run `--isolated` (fresh context every session) with `--test-id-attribute data-qa` so `getByTestId()` in page objects lines up with the app's real attribute, and a fixed viewport matching CI. Used for exploring a flow before a locator gets written into a page object.
 
 Locator-resolution order when exploring: accessible role + name first (`getByRole`), then `data-qa` (`getByTestId`), and only when neither exists, a documented CSS fallback with a comment explaining why.
+
+Full detail, including known traps in this app (nav scoping, the AdSense timing difference between a suite run and a live MCP session, the native confirm dialog on delete), lives in `.claude/skills/playwright-mcp/SKILL.md`.
 
 ## Confidence-gated planning
 
@@ -103,6 +122,9 @@ Below 5: no plan is proposed. The agent goes back and explores (reads the live D
 - `expect(` inside `src/pages/**` (page objects don't assert)
 - A new `test.describe(` without a `tag:` alongside it
 - A spec under `tests/**/*.spec.ts` importing `test`/`expect` from `@playwright/test` directly instead of `src/fixtures/base-test`
+- A UI spec file (`tests/**/*.spec.ts`) not named `-positive-paths.spec.ts` or `-negative-paths.spec.ts`
+- An API spec file (`api-tests/**/*.spec.ts`) not named `-positive-paths`, `-negative-paths`, or `-schema-validation-paths`
+- A `test()` title that doesn't start with `Verify that`
 
 A hit blocks the write with an explanation on stderr; a clean write proceeds silently. This is a hard backstop under the prompt-level rules, not a replacement for the reviewer agent's judgment calls (coverage gaps, whether an assertion is meaningful) that a grep can't make.
 
