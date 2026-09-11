@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/scripts/enforce-constitution.mjs"
+            "command": "python3 .claude/scripts/enforce_constitution.py"
           }
         ]
       }
