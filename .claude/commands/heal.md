@@ -1,0 +1,21 @@
+---
+description: Diagnose and repair a failing test
+argument-hint: <case id or spec file>
+allowed-tools: Task, Read, Edit, Grep, Glob, Bash, mcp__playwright-test__browser_navigate, mcp__playwright-test__browser_snapshot, mcp__playwright-test__browser_click, mcp__playwright-test__browser_evaluate
+---
+
+Delegate to the **playwright-test-healer** agent.
+
+Failing test: $ARGUMENTS
+
+The healer must establish the root cause before changing anything, using the trace/Allure report
+or a live MCP session, and classify the failure per `CLAUDE.md`'s flaky-test discipline. Hard
+limits it may not cross:
+
+- No weakening what the test asserts to make it green
+- No `waitForTimeout`, no raising `retries`
+- No updating a VR baseline without first confirming the visual change was intentional
+- If the site is genuinely broken, mark `test.fixme()` with the defect named and report it
+  rather than editing the test until it passes
+
+It reports root cause, evidence, fix, and a clean verification run without retries.
