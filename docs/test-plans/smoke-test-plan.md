@@ -8,12 +8,12 @@ should never fail because the demo store's products or a test account changed.
 
 ## Spec Files
 
-- `tests/smoke/smoke-positive-paths.spec.ts` - `happy` cases below
-- `tests/smoke/smoke-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
+- `tests/ui/smoke/smoke-positive-paths.spec.ts` - `happy` cases below
+- `tests/ui/smoke/smoke-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
 
 ## Preconditions
 
-Seed: `tests/smoke/smoke-positive-paths.spec.ts` doubles as the environment seed here - if it fails, treat
+Seed: `tests/ui/smoke/smoke-positive-paths.spec.ts` doubles as the environment seed here - if it fails, treat
 every other suite's result with suspicion before investigating them individually.
 
 - A fresh, unauthenticated browser context (the `chromium` project, not `chromium-authenticated`).

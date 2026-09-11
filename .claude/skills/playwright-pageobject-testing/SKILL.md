@@ -45,14 +45,14 @@ yet.
 
 ## File naming
 
-One spec file per path type, never mixed. A UI feature/page gets exactly two:
+One spec file per path type, never mixed. A UI feature/page (`tests/ui/<area>/`) gets exactly two:
 
 | File                            | Holds                           |
 | ------------------------------- | ------------------------------- |
 | `<area>-positive-paths.spec.ts` | The plan's `happy` cases        |
 | `<area>-negative-paths.spec.ts` | The plan's `edge`/`error` cases |
 
-An API feature/page (`api-tests/<area>/`) gets those same two plus a third:
+An API feature/page (`tests/api/<area>/`) gets those same two plus a third:
 
 | File                                     | Holds                                                             |
 | ---------------------------------------- | ----------------------------------------------------------------- |
@@ -96,7 +96,7 @@ export class CartPage extends BaseAppPage {
 
 ```typescript
 // spec: docs/test-plans/cart-test-plan.md
-// file: tests/cart/cart-positive-paths.spec.ts
+// file: tests/ui/cart/cart-positive-paths.spec.ts
 import { expect, test } from '../../src/fixtures/base-test';
 import { KNOWN_PRODUCT } from '../../src/data/catalog';
 
@@ -124,7 +124,7 @@ test.describe('Cart', { tag: '@regression' }, () => {
   that's how the ad-blocking network fixture and the page-object fixtures get injected.
 - `test.describe` carries the one tag for every test inside it, inherited, not repeated per test.
 - `test.step` marks distinct phases (Given/When/Then), not every single action.
-- **Every title starts with `Verify that the user`** (`Verify that the API` for an `api-tests/`
+- **Every title starts with `Verify that the user`** (`Verify that the API` for an `tests/api/`
   case), optionally prefixed with the plan's case ID - `'TC-09: Verify that ...'`. States the
   outcome as a claim, never the mechanism ("clicks the button", "calls the endpoint"). The
   mechanical hook (`.claude/scripts/enforce_constitution.py`) blocks anything else.

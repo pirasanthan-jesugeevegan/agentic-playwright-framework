@@ -11,14 +11,14 @@ What this area covers, in two or three sentences. State the boundary, not the fe
 
 ## Spec Files
 
-- `tests/<area>/<area>-positive-paths.spec.ts` - `happy` cases below (mark "not yet planned" if
+- `tests/ui/<area>/<area>-positive-paths.spec.ts` - `happy` cases below (mark "not yet planned" if
   none exist)
-- `tests/<area>/<area>-negative-paths.spec.ts` - `edge`/`error` cases below (mark "not yet
+- `tests/ui/<area>/<area>-negative-paths.spec.ts` - `edge`/`error` cases below (mark "not yet
   planned" if none exist)
 
 ## Preconditions
 
-Seed: `tests/smoke/smoke-positive-paths.spec.ts`
+Seed: `tests/ui/smoke/smoke-positive-paths.spec.ts`
 
 - What the suite provides automatically (fresh context, ad-hosts blocked).
 - What a case must arrange itself.

@@ -32,7 +32,7 @@ actually does - only exploration answers that.
 
 `docs/test-plans/<area>-test-plan.md`: Scope, Spec Files (the area's
 `<area>-positive-paths.spec.ts` and `<area>-negative-paths.spec.ts`, marking whichever doesn't
-exist yet as "not yet planned"), Preconditions (seed: `tests/smoke/smoke-positive-paths.spec.ts`),
+exist yet as "not yet planned"), Preconditions (seed: `tests/ui/smoke/smoke-positive-paths.spec.ts`),
 a Test Cases table (`ID | Type | Scenario | Expected`, IDs `TC-nn` continuing the sequence,
 `Type` one of happy/edge/error - `happy` implements into the positive-paths file,
 `edge`/`error` into the negative-paths file), Locator Notes (only where the DOM forced a

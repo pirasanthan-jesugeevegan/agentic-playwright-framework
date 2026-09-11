@@ -2,7 +2,7 @@
 name: playwright-visual-regression
 description: Create and maintain visual regression tests - what to screenshot, how to stabilize state first, threshold selection, masking third-party noise, and baseline management. Use when adding VR coverage or diagnosing a flaky screenshot.
 paths:
-  - vr-tests/**
+  - tests/vr/**
   - docs/vr-test-plans/**
 ---
 
@@ -15,7 +15,7 @@ cries wolf gets ignored, which is worse than having none.
 
 ## This suite does not exist yet
 
-`vr-tests/` and `docs/vr-test-plans/` are not created until the first case is planned. This
+`tests/vr/` and `docs/vr-test-plans/` are not created until the first case is planned. This
 skill documents the standard the first case is built against, the same way
 `playwright-pageobject-testing` was written to match the functional suite's already-working
 conventions. `pnpm test:vr` and its Docker/update variants below are planned script names -
@@ -26,8 +26,8 @@ add them to `package.json` when the suite's own Playwright project is wired into
 
 | Path                                    | Purpose                                               |
 | --------------------------------------- | ----------------------------------------------------- |
-| `vr-tests/`                             | VR spec files, one per feature area                   |
-| `vr-tests/<name>.vr.spec.ts-snapshots/` | Baseline PNGs, created by Playwright next to the spec |
+| `tests/vr/`                             | VR spec files, one per feature area                   |
+| `tests/vr/<name>.vr.spec.ts-snapshots/` | Baseline PNGs, created by Playwright next to the spec |
 | `docs/vr-test-plans/`                   | VR test plans                                         |
 
 | Item       | Pattern              | Example           |
@@ -58,19 +58,19 @@ screenshot and does persist, which is the opposite of what most people assume.
 
 ## Config that a capture depends on
 
-| Setting                     | Value                                                                |
-| --------------------------- | -------------------------------------------------------------------- |
-| Default `maxDiffPixelRatio` | `0.01`, set globally in `expect.toHaveScreenshot`                    |
-| `animations`                | `disabled`, also global                                              |
-| Viewport                    | 1920x1080, matching `playwright.config.ts`'s existing `use` block    |
-| Project                     | `visual-regression`, Chromium only, `testMatch: /.*\.vr\.spec\.ts$/` |
-| Baselines                   | `vr-tests/<area>.vr.spec.ts-snapshots/`, Linux                       |
+| Setting                     | Value                                                             |
+| --------------------------- | ----------------------------------------------------------------- |
+| Default `maxDiffPixelRatio` | `0.01`, set globally in `expect.toHaveScreenshot`                 |
+| `animations`                | `disabled`, also global                                           |
+| Viewport                    | 1920x1080, matching `playwright.config.ts`'s existing `use` block |
+| Project                     | `visual-regression`, Chromium only, `testDir: './tests/vr'`       |
+| Baselines                   | `tests/vr/<area>.vr.spec.ts-snapshots/`, Linux                    |
 
 ## Spec Structure
 
 ```typescript
 // spec: docs/vr-test-plans/cart-vr-test-plan.md
-import { expect, test } from '../src/fixtures/base-test';
+import { expect, test } from '../../src/fixtures/base-test';
 
 test.describe('Visual regression - cart', { tag: '@regression' }, () => {
   test.beforeEach(async ({ cartPage }) => {

@@ -21,7 +21,7 @@ yet, and a page object shaped after the spec ends up shaped by the wrong thing.
 4. **Page objects expose locators and actions; they never assert** - `expect()` lives in the
    spec, inside a `test.step()`.
 5. **Title the case `<ID>: Verify that the user ...`** (`Verify that the API ...` for an
-   `api-tests/` case) - state the outcome as a claim, not a mechanism. The mechanical hook
+   `tests/api/` case) - state the outcome as a claim, not a mechanism. The mechanical hook
    blocks anything else.
 6. **New test data goes in `src/data/`** - generated for anything unique per run, a
    dated/labelled seed for anything mirroring real catalog state.
@@ -29,9 +29,9 @@ yet, and a page object shaped after the spec ends up shaped by the wrong thing.
 
 ## Before you write the file
 
-A UI area (`tests/<area>/`) gets exactly two files: `<area>-positive-paths.spec.ts` for the
+A UI area (`tests/ui/<area>/`) gets exactly two files: `<area>-positive-paths.spec.ts` for the
 `happy` cases, `<area>-negative-paths.spec.ts` for `edge`/`error`. An API area
-(`api-tests/<area>/`) gets those same two, plus `<area>-schema-validation-paths.spec.ts` for
+(`tests/api/<area>/`) gets those same two, plus `<area>-schema-validation-paths.spec.ts` for
 request-body shapes - skip that third file for a `GET`/`DELETE` endpoint, which carries no body.
 Check the target file doesn't already exist before creating it - a case for an area that already
 has the matching file gets added there, not into a new one. A case belongs in whichever file

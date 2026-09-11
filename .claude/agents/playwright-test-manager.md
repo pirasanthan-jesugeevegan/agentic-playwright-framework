@@ -29,12 +29,12 @@ past the cap without an explicit swap.
 
 Every workflow starts the same way: find out what already exists, in this order.
 
-| Artefact      | Where                                        | If it exists                                                                 |
-| ------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
-| Test plan     | `docs/test-plans/<area>-test-plan.md`        | Extend its table; never open a second file for the same area                 |
-| Positive spec | `tests/<area>/<area>-positive-paths.spec.ts` | Add the `happy` case to it                                                   |
-| Negative spec | `tests/<area>/<area>-negative-paths.spec.ts` | Add the `edge`/`error` case to it; create it the first time an area gets one |
-| Page object   | `src/pages/`                                 | Extend the class; add the locator or the method                              |
+| Artefact      | Where                                           | If it exists                                                                 |
+| ------------- | ----------------------------------------------- | ---------------------------------------------------------------------------- |
+| Test plan     | `docs/test-plans/<area>-test-plan.md`           | Extend its table; never open a second file for the same area                 |
+| Positive spec | `tests/ui/<area>/<area>-positive-paths.spec.ts` | Add the `happy` case to it                                                   |
+| Negative spec | `tests/ui/<area>/<area>-negative-paths.spec.ts` | Add the `edge`/`error` case to it; create it the first time an area gets one |
+| Page object   | `src/pages/`                                    | Extend the class; add the locator or the method                              |
 
 Three outcomes only: nothing exists, so it's created; it exists and is still right, so the
 request is answered with its ID and nothing is written; it exists and is wrong, so it's

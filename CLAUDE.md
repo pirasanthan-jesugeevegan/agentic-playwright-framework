@@ -32,14 +32,18 @@ src/
   fixtures/    Dependency-injected page-object fixtures + the ad-blocking network fixture
   data/        Test data generators/seeds - never hardcoded inline in a spec
   config/      Environment + project (browser matrix) configuration
-tests/         UI E2E specs, one directory per feature area. Two files per area:
+tests/         One root, three sibling suites - every browser project's testDir is pinned
+               to tests/ui specifically (src/config/projects.ts), so adding tests/api or
+               tests/vr never smears those specs across every browser/device.
+  ui/          UI E2E specs, one directory per feature area. Two files per area:
                <area>-positive-paths.spec.ts and <area>-negative-paths.spec.ts.
-               Specs import from src/fixtures/base-test.
-vr-tests/      Visual regression specs (planned - see docs/STATUS.md). One
-               <area>.vr.spec.ts per area; see .claude/skills/playwright-visual-regression/.
-api-tests/     API specs (planned - see docs/STATUS.md). Up to three files per feature:
+  api/         API specs (planned - see docs/STATUS.md). Up to three files per feature:
                -positive-paths / -negative-paths / -schema-validation-paths (GET and
                DELETE carry no body, so they skip the schema-validation file).
+  vr/          Visual regression specs (planned - see docs/STATUS.md). One
+               <area>.vr.spec.ts per area; see .claude/skills/playwright-visual-regression/.
+  auth.setup.ts  Shared setup, not itself organized by suite - feeds chromium-authenticated.
+               All specs import from src/fixtures/base-test.
 docs/          The plan-before-code artifact - not app documentation. STATUS.md is the
                coverage tracker and cap; test-plans/<area>-test-plan.md is written and
                reviewed *before* a single line of test code, one plan per feature area.
@@ -122,8 +126,9 @@ Below 5: no plan is proposed. The agent goes back and explores (reads the live D
 - `expect(` inside `src/pages/**` (page objects don't assert)
 - A new `test.describe(` without a `tag:` alongside it
 - A spec under `tests/**/*.spec.ts` importing `test`/`expect` from `@playwright/test` directly instead of `src/fixtures/base-test`
-- A UI spec file (`tests/**/*.spec.ts`) not named `-positive-paths.spec.ts` or `-negative-paths.spec.ts`
-- An API spec file (`api-tests/**/*.spec.ts`) not named `-positive-paths`, `-negative-paths`, or `-schema-validation-paths`
+- A UI spec file (`tests/ui/**/*.spec.ts`) not named `-positive-paths.spec.ts` or `-negative-paths.spec.ts`
+- An API spec file (`tests/api/**/*.spec.ts`) not named `-positive-paths`, `-negative-paths`, or `-schema-validation-paths`
+- A visual regression spec file (`tests/vr/**/*.spec.ts`) not named `<area>.vr.spec.ts`
 - A `test()` title that doesn't start with `Verify that`
 
 A hit blocks the write with an explanation on stderr; a clean write proceeds silently. This is a hard backstop under the prompt-level rules, not a replacement for the reviewer agent's judgment calls (coverage gaps, whether an assertion is meaningful) that a grep can't make.

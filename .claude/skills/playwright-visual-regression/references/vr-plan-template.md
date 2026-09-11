@@ -5,7 +5,7 @@ Every plan in `docs/vr-test-plans/` uses this shape.
 ```markdown
 # <Area> Visual Regression Test Plan
 
-Spec file: `vr-tests/<area>.vr.spec.ts`.
+Spec file: `tests/vr/<area>.vr.spec.ts`.
 
 ## Scope
 

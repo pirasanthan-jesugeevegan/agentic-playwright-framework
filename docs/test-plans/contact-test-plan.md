@@ -6,12 +6,12 @@ Submitting the contact form successfully.
 
 ## Spec Files
 
-- `tests/contact/contact-positive-paths.spec.ts` - `happy` cases below
-- `tests/contact/contact-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
+- `tests/ui/contact/contact-positive-paths.spec.ts` - `happy` cases below
+- `tests/ui/contact/contact-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
 
 ## Preconditions
 
-Seed: `tests/smoke/smoke-positive-paths.spec.ts`
+Seed: `tests/ui/smoke/smoke-positive-paths.spec.ts`
 
 - A fresh, unauthenticated browser context.
 - `generateContactMessage()` from `src/data/contact-message.ts` - a fresh, unique message every

@@ -6,12 +6,12 @@ Adding a product to the cart from its detail page, and that the chosen quantity 
 
 ## Spec Files
 
-- `tests/product-detail/product-detail-positive-paths.spec.ts` - `happy` cases below
-- `tests/product-detail/product-detail-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
+- `tests/ui/product-detail/product-detail-positive-paths.spec.ts` - `happy` cases below
+- `tests/ui/product-detail/product-detail-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
 
 ## Preconditions
 
-Seed: `tests/smoke/smoke-positive-paths.spec.ts`
+Seed: `tests/ui/smoke/smoke-positive-paths.spec.ts`
 
 - A fresh, unauthenticated browser context.
 - `KNOWN_PRODUCT` from `src/data/catalog.ts`.

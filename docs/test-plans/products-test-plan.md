@@ -7,12 +7,12 @@ what that page shows once you're there (see `product-detail-test-plan.md`).
 
 ## Spec Files
 
-- `tests/products/products-positive-paths.spec.ts` - `happy` cases below
-- `tests/products/products-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
+- `tests/ui/products/products-positive-paths.spec.ts` - `happy` cases below
+- `tests/ui/products/products-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
 
 ## Preconditions
 
-Seed: `tests/smoke/smoke-positive-paths.spec.ts`
+Seed: `tests/ui/smoke/smoke-positive-paths.spec.ts`
 
 - A fresh, unauthenticated browser context.
 - `KNOWN_PRODUCT` and `SEARCH_TERM` from `src/data/catalog.ts` - a hand-captured seed snapshot

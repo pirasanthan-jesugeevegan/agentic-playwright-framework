@@ -24,7 +24,7 @@ invented from assumption.
 
 ## Visual regression suite
 
-Not yet built. Tracked here once `vr-tests/` and `docs/vr-test-plans/` exist.
+Not yet built. Tracked here once `tests/vr/` and `docs/vr-test-plans/` exist.
 
 ## API suite
 
