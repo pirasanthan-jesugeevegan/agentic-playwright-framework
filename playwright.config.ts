@@ -1,53 +1,22 @@
-import { defineConfig, devices } from '@playwright/test';
-import { loadEnvironment } from './src/config/environment';
+import { defineConfig } from '@playwright/test';
+import { loadFrameworkConfig } from './src/config/framework';
+import { projects } from './src/config/projects';
 
-const env = loadEnvironment();
+const config = loadFrameworkConfig();
 
 export default defineConfig({
   testDir: './tests',
-
   fullyParallel: true,
-
   forbidOnly: !!process.env.CI,
-
-  retries: env.PW_RETRIES ?? (process.env.CI ? 2 : 0),
-
-  workers: env.PW_WORKERS,
-
-  reporter: [['html'], ['list']],
-
+  retries: config.retries,
+  workers: config.workers,
+  reporter: [['list'], ['html']],
   use: {
-    baseURL: env.APP_URL,
-
+    baseURL: config.appUrl,
     trace: 'on-first-retry',
-
     screenshot: 'only-on-failure',
-
     video: 'retain-on-failure',
-
-    actionTimeout: env.PW_TIMEOUT,
+    actionTimeout: config.timeout,
   },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
-
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-      },
-    },
-
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-      },
-    },
-  ],
+  projects,
 });

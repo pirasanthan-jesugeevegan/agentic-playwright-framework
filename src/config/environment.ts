@@ -10,7 +10,7 @@ function loadDotEnv(): void {
 }
 
 const environmentSchema = z.object({
-  ENVIRONMENT: z.string().default('dev'),
+  ENVIRONMENT: z.enum(['dev', 'staging', 'production']).default('dev'),
 
   APP_URL: z.string().url(),
 
