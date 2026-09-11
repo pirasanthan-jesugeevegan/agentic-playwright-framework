@@ -2,6 +2,11 @@ import { devices, type Project } from '@playwright/test';
 
 export const projects: Project[] = [
   {
+    name: 'setup',
+    testMatch: /.*\.setup\.ts/,
+  },
+
+  {
     name: 'chromium',
     use: {
       ...devices['Desktop Chrome'],
@@ -33,6 +38,15 @@ export const projects: Project[] = [
     name: 'mobile-safari',
     use: {
       ...devices['iPhone 13'],
+    },
+  },
+
+  {
+    name: 'chromium-authenticated',
+    dependencies: ['setup'],
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: '.auth/user.json',
     },
   },
 ];
