@@ -29,21 +29,23 @@ Live report: https://pirasanthan-jesugeevegan.github.io/agentic-playwright-frame
 ```
 src/
   pages/       Page objects. BaseAppPage carries shared header chrome; each page extends it.
-  fixtures/    Dependency-injected page-object fixtures + the ad-blocking network fixture
+  fixtures/    Dependency-injected fixtures: pom/ (page objects + merged test), api/
+               (apiRequest, Zod schemas), and the ad-blocking network fixture
   data/        Test data generators/seeds - never hardcoded inline in a spec
-  config/      Environment + project (browser matrix) configuration
+  config/      Environment (environments/<ENV>.json, ENV-selected) + project (browser
+               matrix) configuration
 tests/         One root, three sibling suites - every browser project's testDir is pinned
                to tests/ui specifically (src/config/projects.ts), so adding tests/api or
                tests/vr never smears those specs across every browser/device.
   ui/          UI E2E specs, one directory per feature area. Two files per area:
                <area>-positive-paths.spec.ts and <area>-negative-paths.spec.ts.
-  api/         API specs (planned - see docs/STATUS.md). Up to three files per feature:
-               -positive-paths / -negative-paths / -schema-validation-paths (GET and
-               DELETE carry no body, so they skip the schema-validation file).
+  api/         API specs. Up to three files per feature: -positive-paths /
+               -negative-paths / -schema-validation-paths (GET and DELETE carry no
+               body, so they skip the schema-validation file). See docs/STATUS.md.
   vr/          Visual regression specs (planned - see docs/STATUS.md). One
                <area>.vr.spec.ts per area; see .claude/skills/playwright-visual-regression/.
   auth.setup.ts  Shared setup, not itself organized by suite - feeds chromium-authenticated.
-               All specs import from src/fixtures/base-test.
+               All specs import from src/fixtures/pom/test-options.
 docs/          The plan-before-code artifact - not app documentation. STATUS.md is the
                coverage tracker and cap; test-plans/<area>-test-plan.md is written and
                reviewed *before* a single line of test code, one plan per feature area.
@@ -54,7 +56,7 @@ docs/          The plan-before-code artifact - not app documentation. STATUS.md 
   skills/      Coding standards the agents (and a human) follow: page-object testing,
                visual regression, live MCP exploration
   scripts/     enforce_constitution.py, the mechanical PreToolUse hook
-.github/workflows/  CI: install -> test (6 projects) -> publish-report to GitHub Pages
+.github/workflows/  CI: install -> test (7 projects) -> publish-report to GitHub Pages
 ```
 
 ## Coding standards
@@ -91,7 +93,7 @@ This suite is authored and maintained with an AI coding agent operating under th
 | `playwright-test-healer`    | Root-causes a failing test or a red CI run before proposing any fix - diagnose, don't guess                       | `/heal`, `/triage`, `/baseline`               |
 | `playwright-test-reviewer`  | Read-only convention audit against this file and `.claude/skills/`, before a human commits                        | `/review`                                     |
 
-Coverage stays deliberate: `docs/STATUS.md` holds a hard cap (functional: 15, currently 10) - a suite extends past it only with an explicit swap, named and justified, never by default. Visual regression and API suites get their own caps once they exist.
+Coverage stays deliberate: `docs/STATUS.md` holds a hard cap (functional: 15, currently 13) - a suite extends past it only with an explicit swap, named and justified, never by default. The API suite exists now (14 cases, cap not yet set - see `docs/STATUS.md`'s Open decisions); visual regression still has neither.
 
 ## Live exploration (MCP)
 
@@ -125,7 +127,7 @@ Below 5: no plan is proposed. The agent goes back and explores (reads the live D
 - An XPath locator (`xpath=` or `locator('//...')`)
 - `expect(` inside `src/pages/**` (page objects don't assert)
 - A new `test.describe(` without a `tag:` alongside it
-- A spec under `tests/**/*.spec.ts` importing `test`/`expect` from `@playwright/test` directly instead of `src/fixtures/base-test`
+- A spec under `tests/**/*.spec.ts` importing `test`/`expect` from `@playwright/test` directly instead of `src/fixtures/pom/test-options`
 - A UI spec file (`tests/ui/**/*.spec.ts`) not named `-positive-paths.spec.ts` or `-negative-paths.spec.ts`
 - An API spec file (`tests/api/**/*.spec.ts`) not named `-positive-paths`, `-negative-paths`, or `-schema-validation-paths`
 - A visual regression spec file (`tests/vr/**/*.spec.ts`) not named `<area>.vr.spec.ts`

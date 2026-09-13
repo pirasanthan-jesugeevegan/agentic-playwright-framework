@@ -70,7 +70,7 @@ screenshot and does persist, which is the opposite of what most people assume.
 
 ```typescript
 // spec: docs/vr-test-plans/cart-vr-test-plan.md
-import { expect, test } from '../../src/fixtures/base-test';
+import { expect, test } from '../../src/fixtures/pom/test-options';
 
 test.describe('Visual regression - cart', { tag: '@regression' }, () => {
   test.beforeEach(async ({ cartPage }) => {

@@ -100,9 +100,9 @@ RULES = [
     (
         r"^tests/.*\.spec\.tsx?$",
         lambda c, p: bool(re.search(r"""from\s+['"]@playwright/test['"]""", c)),
-        "Specs import test/expect from src/fixtures/base-test, not "
-        "@playwright/test directly - that's how page-object fixtures "
-        "get injected.",
+        "Specs import test/expect from src/fixtures/pom/test-options, not "
+        "@playwright/test directly - that's how page-object and API "
+        "request fixtures get injected.",
     ),
     (
         r"^tests/ui/.*\.spec\.tsx?$",

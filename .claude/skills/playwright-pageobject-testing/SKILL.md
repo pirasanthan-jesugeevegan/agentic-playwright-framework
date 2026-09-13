@@ -26,7 +26,7 @@ yet.
    (`clickAddButton`).
 4. **Add the locator.** `readonly`, assigned in the constructor, semantic first, a CSS fallback
    only with an inline reason.
-5. **Register the fixture** in `src/fixtures/page-object-fixtures.ts` - a page object without a
+5. **Register the fixture** in `src/fixtures/pom/page-object-fixture.ts` - a page object without a
    fixture can't reach a spec.
 6. **Write the case.** Given/When/Then via `test.step()`, the fixtures named in the test
    signature, the title in the user's language.
@@ -90,14 +90,14 @@ export class CartPage extends BaseAppPage {
 - **Page objects don't assert.** `expect()` lives in the spec (or, rarely, a setup script);
   a page object waits for readiness with `.waitFor()`, it doesn't judge the outcome.
 - Export every class from `src/pages/index.ts`, and register it as a fixture in
-  `src/fixtures/page-object-fixtures.ts`.
+  `src/fixtures/pom/page-object-fixture.ts`.
 
 ## Spec structure
 
 ```typescript
 // spec: docs/test-plans/cart-test-plan.md
 // file: tests/ui/cart/cart-positive-paths.spec.ts
-import { expect, test } from '../../src/fixtures/base-test';
+import { expect, test } from '../../src/fixtures/pom/test-options';
 import { KNOWN_PRODUCT } from '../../src/data/catalog';
 
 test.describe('Cart', { tag: '@regression' }, () => {
@@ -120,8 +120,8 @@ test.describe('Cart', { tag: '@regression' }, () => {
 });
 ```
 
-- Import `test`/`expect` from `src/fixtures/base-test`, never from `@playwright/test` directly -
-  that's how the ad-blocking network fixture and the page-object fixtures get injected.
+- Import `test`/`expect` from `src/fixtures/pom/test-options`, never from `@playwright/test`
+  directly - that's how the ad-blocking, page-object, and API request fixtures get injected.
 - `test.describe` carries the one tag for every test inside it, inherited, not repeated per test.
 - `test.step` marks distinct phases (Given/When/Then), not every single action.
 - **Every title starts with `Verify that the user`** (`Verify that the API` for an `tests/api/`
@@ -131,10 +131,11 @@ test.describe('Cart', { tag: '@regression' }, () => {
 
 ## Fixtures
 
-| Fixture                                                                    | Provides                                                           |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `homePage`, `productsPage`, `productDetailPage`, `cartPage`, `contactPage` | One page object per surface, built only for the tests that name it |
-| `page`                                                                     | Playwright's page, with ad-host requests aborted for every test    |
+| Fixture                                                                                 | Provides                                                                                 |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `homePage`, `productsPage`, `productDetailPage`, `cartPage`, `contactPage`, `loginPage` | One page object per surface, built only for the tests that name it                       |
+| `page`                                                                                  | Playwright's page, with ad-host requests aborted for every test                          |
+| `apiRequest`                                                                            | Sends one HTTP request via the `api` project's `request` fixture, used by `tests/api/**` |
 
 A new page object gets a fixture in the same change that adds the class.
 
