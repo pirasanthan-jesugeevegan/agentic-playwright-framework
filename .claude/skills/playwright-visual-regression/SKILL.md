@@ -13,14 +13,15 @@ paths:
 Screenshots that fail when the site's appearance changes and at no other time. A VR suite that
 cries wolf gets ignored, which is worse than having none.
 
-## This suite does not exist yet
+## This suite exists: 10 / 10, full
 
-`tests/vr/` and `docs/vr-test-plans/` are not created until the first case is planned. This
-skill documents the standard the first case is built against, the same way
-`playwright-pageobject-testing` was written to match the functional suite's already-working
-conventions. `pnpm test:vr` and its Docker/update variants below are planned script names -
-add them to `package.json` when the suite's own Playwright project is wired into
-`src/config/projects.ts`, not before.
+`tests/vr/` and `docs/vr-test-plans/` hold 10 cases across home, products, product detail, cart,
+contact, and login - see `docs/STATUS.md` for the per-area table. The `visual-regression`
+Playwright project is wired into `src/config/projects.ts` (Chromium only, 1920x1080), and
+`pnpm test:vr` / `pnpm test:vr:update` are real scripts in `package.json`, not placeholders.
+
+New coverage replaces an existing case rather than growing past the cap, same discipline as the
+other two suites.
 
 ## Repository Conventions
 
@@ -193,7 +194,7 @@ the VR project, not something to patch per-test.
 ## Baseline Management
 
 ```bash
-pnpm test:vr            # run against committed baselines (add this script when the suite exists)
+pnpm test:vr            # run against committed baselines
 pnpm test:vr:update     # regenerate - only run in the Linux CI image, never on macOS
 ```
 

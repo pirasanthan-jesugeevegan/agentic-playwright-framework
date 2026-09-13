@@ -6,12 +6,11 @@ export class ProductsPage extends BaseAppPage {
   readonly searchButton: Locator;
   readonly allProductsHeading: Locator;
   readonly searchedProductsHeading: Locator;
+  readonly productGrid: Locator;
 
   constructor(page: Page) {
     super(page);
 
-    // No accessible name or data-qa hook on the search box; #search_product
-    // and #submit_search are the application's own ids, not test-only ones.
     this.searchInput = page.locator('#search_product');
     this.searchButton = page.locator('#submit_search');
 
@@ -21,6 +20,7 @@ export class ProductsPage extends BaseAppPage {
     this.searchedProductsHeading = page.getByRole('heading', {
       name: 'Searched Products',
     });
+    this.productGrid = page.locator('.features_items');
   }
 
   async open(): Promise<void> {

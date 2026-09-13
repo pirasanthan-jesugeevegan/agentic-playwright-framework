@@ -1,8 +1,14 @@
 {
   "name": "agentic-playwright-framework",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Agent-authored Playwright + TypeScript E2E suite for automationexercise.com, with coding standards mechanically enforced pre-commit.",
+  "keywords": [
+    "playwright",
+    "typescript",
+    "e2e-testing",
+    "page-object-model",
+    "ai-agent"
+  ],
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
@@ -16,6 +22,8 @@
     "validate": "npm run lint && npm run format:check && npm run typecheck",
     "prepare": "husky",
     "test:smoke": "playwright test --grep @smoke",
+    "test:vr": "playwright test --project=visual-regression",
+    "test:vr:update": "playwright test --project=visual-regression --update-snapshots",
     "report:allure:generate": "allure generate ./allure-results --clean -o ./allure-report",
     "report:allure:open": "allure open ./allure-report"
   },
@@ -23,8 +31,7 @@
     "type": "git",
     "url": "git+https://github.com/pirasanthan-jesugeevegan/agentic-playwright-framework.git"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Pirasanthan Jesugeevegan",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/pirasanthan-jesugeevegan/agentic-playwright-framework/issues"

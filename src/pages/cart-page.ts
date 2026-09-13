@@ -7,23 +7,20 @@ export class CartPage extends BaseAppPage {
   readonly proceedToCheckoutLink: Locator;
   readonly loginRequiredMessage: Locator;
   readonly registerLoginLink: Locator;
+  readonly checkoutModalContent: Locator;
 
   constructor(page: Page) {
     super(page);
     this.emptyCartMessage = page.locator('#empty_cart');
     this.cartTable = page.locator('#cart_info_table');
-    this.proceedToCheckoutLink = page.getByRole('link', {
-      name: 'Proceed To Checkout',
-    });
-    // Shown instead of the checkout page for an anonymous visitor - the
-    // link text differs from the header's "Signup / Login", so no scoping
-    // is needed to tell them apart.
+    this.proceedToCheckoutLink = page.locator('.check_out');
     this.loginRequiredMessage = page.getByText(
       'Register / Login account to proceed on checkout.',
     );
     this.registerLoginLink = page.getByRole('link', {
       name: 'Register / Login',
     });
+    this.checkoutModalContent = page.locator('#checkoutModal .modal-content');
   }
 
   async open(): Promise<void> {

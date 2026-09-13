@@ -9,6 +9,7 @@ export interface ContactMessage {
 }
 
 export class ContactPage extends BaseAppPage {
+  readonly contactForm: Locator;
   readonly nameInput: Locator;
   readonly emailInput: Locator;
   readonly subjectInput: Locator;
@@ -19,8 +20,7 @@ export class ContactPage extends BaseAppPage {
   constructor(page: Page) {
     super(page);
 
-    // This form carries real data-qa hooks - the semantic option here,
-    // not a fallback.
+    this.contactForm = page.locator('#contact-us-form');
     this.nameInput = page.getByTestId('name');
     this.emailInput = page.getByTestId('email');
     this.subjectInput = page.getByTestId('subject');

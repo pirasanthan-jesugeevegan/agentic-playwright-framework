@@ -22,13 +22,15 @@ pnpm test:smoke         # @smoke-tagged cases only
 
 ## Scripts
 
-| Command                                              | Purpose                                             |
-| ---------------------------------------------------- | --------------------------------------------------- |
-| `pnpm test`                                          | Run the full suite, every project                   |
-| `pnpm test:smoke`                                    | `@smoke`-tagged cases only                          |
-| `pnpm test:ui` / `test:headed` / `test:debug`        | Interactive runs                                    |
-| `pnpm validate`                                      | lint + format:check + typecheck - all must be clean |
-| `pnpm report:allure:generate` / `report:allure:open` | Build and view the Allure report locally            |
+| Command                                              | Purpose                                              |
+| ---------------------------------------------------- | ---------------------------------------------------- |
+| `pnpm test`                                          | Run the full suite, every project                    |
+| `pnpm test:smoke`                                    | `@smoke`-tagged cases only                           |
+| `pnpm test:ui` / `test:headed` / `test:debug`        | Interactive runs                                     |
+| `pnpm validate`                                      | lint + format:check + typecheck - all must be clean  |
+| `pnpm test:vr`                                       | Visual-regression project only                       |
+| `pnpm test:vr:update`                                | Regenerate VR baselines (Linux only - see the skill) |
+| `pnpm report:allure:generate` / `report:allure:open` | Build and view the Allure report locally             |
 
 ## Suite coverage
 

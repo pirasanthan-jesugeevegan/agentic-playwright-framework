@@ -1,9 +1,13 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { BaseAppPage } from './base-app-page';
 
 export class HomePage extends BaseAppPage {
+  readonly categoryPanel: Locator;
+
   constructor(page: Page) {
     super(page);
+
+    this.categoryPanel = page.locator('.left-sidebar');
   }
 
   async open(): Promise<void> {

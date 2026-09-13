@@ -42,7 +42,7 @@ tests/         One root, three sibling suites - every browser project's testDir 
   api/         API specs. Up to three files per feature: -positive-paths /
                -negative-paths / -schema-validation-paths (GET and DELETE carry no
                body, so they skip the schema-validation file). See docs/STATUS.md.
-  vr/          Visual regression specs (planned - see docs/STATUS.md). One
+  vr/          Visual regression specs (10, full - see docs/STATUS.md). One
                <area>.vr.spec.ts per area; see .claude/skills/playwright-visual-regression/.
   auth.setup.ts  Shared setup, not itself organized by suite - feeds chromium-authenticated.
                All specs import from src/fixtures/pom/test-options.
@@ -93,7 +93,7 @@ This suite is authored and maintained with an AI coding agent operating under th
 | `playwright-test-healer`    | Root-causes a failing test or a red CI run before proposing any fix - diagnose, don't guess                       | `/heal`, `/triage`, `/baseline`               |
 | `playwright-test-reviewer`  | Read-only convention audit against this file and `.claude/skills/`, before a human commits                        | `/review`                                     |
 
-Coverage stays deliberate: `docs/STATUS.md` holds a hard cap per suite (functional: 15, currently 13; API: 10, full) - a suite extends past its cap only with an explicit swap, named and justified, never by default. Visual regression has neither yet; see `docs/STATUS.md`'s Open decisions.
+Coverage stays deliberate: `docs/STATUS.md` holds a hard cap per suite (functional: 15, currently 13; API: 10, full; visual regression: 10, full) - a suite extends past its cap only with an explicit swap, named and justified, never by default. Visual regression's baselines still need generating on a real machine; see `docs/STATUS.md`'s Open decisions.
 
 ## Live exploration (MCP)
 

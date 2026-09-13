@@ -76,5 +76,12 @@ export const projects: Project[] = [
     },
   },
 
-  // TODO: a `visual-regression` project (testDir: './tests/vr') per CLAUDE.md's roadmap.
+  {
+    name: 'visual-regression',
+    testDir: './tests/vr',
+    use: {
+      ...devices['Desktop Chrome'],
+      viewport: { width: 1920, height: 1080 },
+    },
+  },
 ];

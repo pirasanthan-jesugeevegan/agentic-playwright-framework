@@ -17,6 +17,10 @@ export class LoginPage extends BaseAppPage {
     });
   }
 
+  get loginForm() {
+    return this.page.locator('.login-form');
+  }
+
   get emailInput() {
     return this.page.getByTestId('login-email');
   }

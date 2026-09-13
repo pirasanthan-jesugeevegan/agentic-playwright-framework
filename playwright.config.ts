@@ -4,11 +4,6 @@ import { projects } from './src/config/projects';
 
 const config = loadFrameworkConfig();
 
-/**
- * Fills the published report's Environment panel, so a run says what it
- * actually executed against instead of leaving a reader to guess which
- * commit, branch, or tier produced it.
- */
 const allureReporter: ReporterDescription = [
   'allure-playwright',
   {
@@ -34,11 +29,17 @@ export default defineConfig({
   reporter: [['list'], ['html'], allureReporter],
   use: {
     baseURL: config.appUrl,
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: config.timeout,
     testIdAttribute: 'data-qa',
+  },
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.01,
+      animations: 'disabled',
+    },
   },
   projects,
 });
