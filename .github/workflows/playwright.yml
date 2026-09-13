@@ -78,6 +78,24 @@ jobs:
           merge-multiple: true
       - name: Generate Allure report
         run: pnpm exec allure generate ./allure-results --clean -o ./allure-report
+
+      - name: Prove the contract verifier works
+        run: |
+          node scripts/qa-showcase/verify-contract.mjs --base scripts/qa-showcase/fixtures/report-good > /dev/null
+          if node scripts/qa-showcase/verify-contract.mjs --base scripts/qa-showcase/fixtures/report-drifted > /dev/null 2>&1; then
+            echo "The verifier accepted a report that has drifted. It is broken."
+            exit 1
+          fi
+          echo "The verifier passes a good report and rejects a drifted one."
+
+      - name: Explain any failures with AI diagnosis
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/qa-showcase/explain-failures.mjs --results-dir ./allure-results --status-md ./docs/STATUS.md --out ./allure-report/ai-diagnosis.json
+
+      - name: Verify the report against the contract before publishing
+        run: node scripts/qa-showcase/verify-contract.mjs --base ./allure-report
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
