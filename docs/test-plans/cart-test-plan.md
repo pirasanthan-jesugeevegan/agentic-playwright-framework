@@ -2,14 +2,14 @@
 
 ## Scope
 
-The cart's own state: starting empty, and returning to empty after the only item is removed.
-Adding an item is exercised from the product detail page (see that plan); this one starts from
-the cart itself.
+The cart's own state: returning to empty after the only item is removed, and the guard an
+anonymous visitor hits at checkout. Adding an item is exercised from the product detail page
+(see that plan); this one starts from the cart itself.
 
 ## Spec Files
 
 - `tests/ui/cart/cart-positive-paths.spec.ts` - `happy` cases below
-- `tests/ui/cart/cart-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
+- `tests/ui/cart/cart-negative-paths.spec.ts` - `error` cases below
 
 ## Preconditions
 
@@ -22,17 +22,20 @@ Seed: `tests/ui/smoke/smoke-positive-paths.spec.ts`
 
 ## Test Cases
 
-| ID    | Type  | Scenario                                        | Expected                            |
-| ----- | ----- | ----------------------------------------------- | ----------------------------------- |
-| TC-08 | happy | A visitor with no prior activity opens the cart | The empty-cart message is shown     |
-| TC-09 | happy | The only item in the cart is removed            | The cart returns to its empty state |
+| ID    | Type  | Scenario                                                           | Expected                                                      |
+| ----- | ----- | ------------------------------------------------------------------ | ------------------------------------------------------------- |
+| TC-08 | happy | The only item in the cart is removed                               | The cart returns to its empty state                           |
+| TC-09 | error | An anonymous visitor with an item in the cart proceeds to checkout | A login prompt is shown and the visitor stays on `/view_cart` |
 
 ## Locator Notes
 
-None beyond the base page object.
+The checkout guard (`Register / Login account to proceed on checkout.`, a `Register / Login`
+link, `Continue On Cart`) is a real `<a href="/login">` and plain text nodes rather than a named
+dialog - `getByRole('link', ...)` and `getByText(...)` are used directly rather than scoping to a
+modal container, confirmed against the live DOM before being written.
 
 ## Out of Scope
 
 - Multiple items in the cart at once
-- Updating quantity from within the cart itself (only from the detail page, TC-07)
-- Proceed to checkout / the checkout flow
+- Updating quantity from within the cart itself (only from the detail page, TC-06)
+- The checkout flow itself once an account exists (only the anonymous guard is covered here)

@@ -36,20 +36,4 @@ export class ProductsPage extends BaseAppPage {
   productCards(): Locator {
     return this.page.locator('.product-image-wrapper');
   }
-
-  /**
-   * Every product on this listing renders two "Add to cart" links (one for
-   * the static card, one for the hover overlay) plus a "View Product" link
-   * addressed by /product_details/{id}. Rather than disambiguate two
-   * hover-dependent duplicates here, add-to-cart is exercised from the
-   * product detail page, where the control is singular. This page object
-   * only needs to get there.
-   */
-  viewProductLink(productId: number): Locator {
-    return this.page.locator(`a[href="/product_details/${productId}"]`);
-  }
-
-  async viewProduct(productId: number): Promise<void> {
-    await this.viewProductLink(productId).click();
-  }
 }

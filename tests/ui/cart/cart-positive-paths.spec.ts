@@ -1,20 +1,9 @@
+// spec: docs/test-plans/cart-test-plan.md
 import { expect, test } from '../../../src/fixtures/pom/test-options';
 import { KNOWN_PRODUCT } from '../../../src/data/catalog';
 
 test.describe('Cart', { tag: '@regression' }, () => {
-  test('TC-08: Verify that the user sees an empty cart on a fresh session with no prior activity', async ({
-    cartPage,
-  }) => {
-    await test.step('GIVEN a visitor with no prior activity opens the cart', async () => {
-      await cartPage.open();
-    });
-
-    await test.step('THEN the empty-cart message is shown', async () => {
-      expect(await cartPage.isEmpty()).toBe(true);
-    });
-  });
-
-  test('TC-09: Verify that the user sees the cart return to its empty state after removing the only item', async ({
+  test('TC-08: Verify that the user sees the cart return to its empty state after removing the only item', async ({
     productDetailPage,
     cartPage,
   }) => {

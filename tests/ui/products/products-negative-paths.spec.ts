@@ -2,7 +2,7 @@
 import { expect, test } from '../../../src/fixtures/pom/test-options';
 
 test.describe('Products', { tag: '@regression' }, () => {
-  test('TC-11: Verify that the user sees no product cards when searching for a term that matches nothing', async ({
+  test('TC-05: Verify that the user sees no product cards when searching for a term that matches nothing', async ({
     productsPage,
   }) => {
     await test.step('GIVEN a visitor is on the products page', async () => {

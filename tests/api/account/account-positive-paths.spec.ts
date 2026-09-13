@@ -6,7 +6,7 @@ import { expect, test } from '../../../src/fixtures/pom/test-options';
 import { KNOWN_ACCOUNT } from '../../../src/data/known-account';
 
 test.describe('Account API', { tag: '@regression' }, () => {
-  test('API-07: Verify that the API confirms an existing account for valid login credentials', async ({
+  test('API-06: Verify that the API confirms an existing account for valid login credentials', async ({
     apiRequest,
   }, testInfo) => {
     const { status, body } = await apiRequest({
@@ -23,7 +23,7 @@ test.describe('Account API', { tag: '@regression' }, () => {
     expect(parsed.message).toContain('User exists');
   });
 
-  test('API-08: Verify that the API returns the correct account details for a known email', async ({
+  test('API-07: Verify that the API returns the correct account details for a known email', async ({
     apiRequest,
   }, testInfo) => {
     const { status, body } = await apiRequest({

@@ -101,7 +101,7 @@ import { expect, test } from '../../src/fixtures/pom/test-options';
 import { KNOWN_PRODUCT } from '../../src/data/catalog';
 
 test.describe('Cart', { tag: '@regression' }, () => {
-  test('TC-09: Verify that the user sees the cart return to its empty state after removing the only item', async ({
+  test('TC-08: Verify that the user sees the cart return to its empty state after removing the only item', async ({
     productDetailPage,
     cartPage,
   }) => {

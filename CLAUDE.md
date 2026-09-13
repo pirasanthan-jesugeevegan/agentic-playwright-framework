@@ -68,7 +68,7 @@ These aren't suggestions - every change, human- or agent-authored, is checked ag
 - **Given/When/Then.** Every test body is structured with `test.step()`, one step per phase.
 - **One tag per feature area** - `@smoke` or `@regression` - declared once on `test.describe(...)`, inherited by every test inside it. Not scattered per-`test()` call, and never both.
 - **One path per spec file.** Every UI feature/page gets exactly two spec files: `<area>-positive-paths.spec.ts` (the happy paths) and `<area>-negative-paths.spec.ts` (edge/error cases). An API feature/page gets up to three: those same two, plus `<area>-schema-validation-paths.spec.ts` exercising the different request-body shapes a `POST`/`PUT`/`PATCH` endpoint accepts and rejects - `GET` and `DELETE` carry no body, so they're exempt from the third file. A case never moves suite by getting shoved into the wrong file; a positive case that belongs in `-negative-paths` is misplanned, not miscoded.
-- **Test titles state the outcome as a claim.** Every `test()` title starts with `Verify that the user` (`Verify that the API` reads fine for a purely API-facing case), optionally prefixed with the plan's case ID - `'TC-09: Verify that the user sees the cart return to its empty state after removing the only item'`. Not a mechanism description, not a fragment.
+- **Test titles state the outcome as a claim.** Every `test()` title starts with `Verify that the user` (`Verify that the API` reads fine for a purely API-facing case), optionally prefixed with the plan's case ID - `'TC-08: Verify that the user sees the cart return to its empty state after removing the only item'`. Not a mechanism description, not a fragment.
 - **Page objects don't assert.** They expose locators, actions, and readiness waits (`.waitFor()`); specs hold the `expect()`s. (`login-page.ts` used to break this - `login()` called `expect(...).toBeVisible()` internally; fixed to `.waitFor({ state: 'visible' })`, an example of exactly what the review/enforcement layers below exist to catch.)
 - **Test data is generated, not copy-pasted.** Anything unique per run (emails, messages) comes from `src/data/`; anything that mirrors real catalog state is a seed, dated and labelled as one, not a magic literal.
 
@@ -93,7 +93,7 @@ This suite is authored and maintained with an AI coding agent operating under th
 | `playwright-test-healer`    | Root-causes a failing test or a red CI run before proposing any fix - diagnose, don't guess                       | `/heal`, `/triage`, `/baseline`               |
 | `playwright-test-reviewer`  | Read-only convention audit against this file and `.claude/skills/`, before a human commits                        | `/review`                                     |
 
-Coverage stays deliberate: `docs/STATUS.md` holds a hard cap (functional: 15, currently 13) - a suite extends past it only with an explicit swap, named and justified, never by default. The API suite exists now (14 cases, cap not yet set - see `docs/STATUS.md`'s Open decisions); visual regression still has neither.
+Coverage stays deliberate: `docs/STATUS.md` holds a hard cap per suite (functional: 15, currently 13; API: 10, full) - a suite extends past its cap only with an explicit swap, named and justified, never by default. Visual regression has neither yet; see `docs/STATUS.md`'s Open decisions.
 
 ## Live exploration (MCP)
 

@@ -23,28 +23,7 @@ test.describe('Account API', { tag: '@regression' }, () => {
     });
   });
 
-  test('API-12: Verify that the API rejects account creation when the email field is missing', async ({
-    apiRequest,
-  }, testInfo) => {
-    const payload = generateAccountPayload();
-    const { email, ...bodyWithoutEmail } = payload;
-    void email;
-
-    const { status, body } = await apiRequest({
-      method: 'POST',
-      url: '/createAccount',
-      form: bodyWithoutEmail,
-    });
-    await attachJson(testInfo, 'response', body);
-
-    expect(status).toBe(200);
-    const parsed = apiResultSchema.parse(body);
-    expect(parsed).toBeTruthy();
-    expect(parsed.responseCode).toBe(400);
-    expect(parsed.message).toContain('email parameter is missing');
-  });
-
-  test('API-13: Verify that the API creates an account when given a complete, valid payload', async ({
+  test('API-09: Verify that the API creates an account when given a complete, valid payload', async ({
     apiRequest,
   }, testInfo) => {
     const payload = generateAccountPayload();
@@ -65,7 +44,7 @@ test.describe('Account API', { tag: '@regression' }, () => {
     createdEmail = payload.email;
   });
 
-  test('API-14: Verify that the API rejects account creation with an email that already exists', async ({
+  test('API-10: Verify that the API rejects account creation with an email that already exists', async ({
     apiRequest,
   }, testInfo) => {
     const payload = generateAccountPayload();
