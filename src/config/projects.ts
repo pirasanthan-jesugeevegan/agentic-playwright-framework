@@ -1,4 +1,7 @@
 import { devices, type Project } from '@playwright/test';
+import { loadFrameworkConfig } from './framework';
+
+const config = loadFrameworkConfig();
 
 export const projects: Project[] = [
   {
@@ -6,13 +9,9 @@ export const projects: Project[] = [
     testMatch: /.*\.setup\.ts/,
   },
 
-  // The suite root (`testDir: './tests'`, set globally in playwright.config.ts)
-  // now holds three sibling trees - tests/ui, tests/api, tests/vr - so every
-  // browser project below pins testDir to tests/ui explicitly. Without it,
-  // Playwright's default testMatch would also pick up tests/api/**/*.spec.ts
-  // and tests/vr/**/*.spec.ts here, running API and visual-regression specs
-  // across all five browser/device combinations instead of the dedicated
-  // project each of those suites needs once they exist.
+  // tests/ui, tests/api, and tests/vr are sibling trees, so every browser
+  // project below pins testDir to tests/ui to avoid also picking up API and
+  // visual-regression specs.
 
   {
     name: 'chromium',
@@ -56,15 +55,9 @@ export const projects: Project[] = [
 
   {
     name: 'chromium-authenticated',
-    // Scoped to its own naming convention rather than matching every spec.
-    // automationexercise.com's cart is tied to the account server-side for a
-    // logged-in session - unlike the anonymous, per-browser-context cart the
-    // rest of the suite exercises - so letting this project pick up every
-    // spec ran each cart/product-detail test a second time against that same
-    // persisted account cart, in parallel with itself across workers,
-    // accumulating quantities between runs (a "3" coming back "5"). No spec
-    // needs a logged-in session yet; name one *.authenticated.spec.ts here
-    // once one does.
+    // Only matches *.authenticated.spec.ts - the account cart is shared
+    // server-side, so running every spec here too would double up
+    // cart/product-detail tests against it.
     testDir: './tests/ui',
     testMatch: /.*\.authenticated\.spec\.ts$/,
     dependencies: ['setup'],
@@ -73,4 +66,15 @@ export const projects: Project[] = [
       storageState: '.auth/user.json',
     },
   },
+
+  {
+    name: 'api',
+    // No browser device - API specs use Playwright's `request` fixture only.
+    testDir: './tests/api',
+    use: {
+      baseURL: config.apiUrl,
+    },
+  },
+
+  // TODO: a `visual-regression` project (testDir: './tests/vr') per CLAUDE.md's roadmap.
 ];

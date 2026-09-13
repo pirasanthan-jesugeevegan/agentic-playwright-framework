@@ -135,4 +135,4 @@ A hit blocks the write with an explanation on stderr; a clean write proceeds sil
 
 ## Environment
 
-`.env` (gitignored) sets `APP_URL` / `API_URL`; see `.env.example` for the shape. Defaults to `https://automationexercise.com`.
+`.env` (gitignored) sets `ENV` to `dev`, `staging`, or `production`; `src/config/framework.ts` loads the matching `src/config/environments/<ENV>.json` (each holding `appUrl`/`apiUrl`) and validates it with Zod. See `.env.example` for the shape.
