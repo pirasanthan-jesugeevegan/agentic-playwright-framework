@@ -8,7 +8,7 @@ what that page shows once you're there (see `product-detail-test-plan.md`).
 ## Spec Files
 
 - `tests/ui/products/products-positive-paths.spec.ts` - `happy` cases below
-- `tests/ui/products/products-negative-paths.spec.ts` - not yet planned; `edge`/`error` cases go here once the planner has explored this area's real error states
+- `tests/ui/products/products-negative-paths.spec.ts` - `error` cases below
 
 ## Preconditions
 
@@ -24,6 +24,7 @@ Seed: `tests/ui/smoke/smoke-positive-paths.spec.ts`
 | ----- | ----- | --------------------------------------------------------- | --------------------------------------------------------------------------- |
 | TC-04 | happy | A visitor searches for "Top"                              | The page switches to a "Searched Products" heading with at least one result |
 | TC-05 | happy | A visitor opens `KNOWN_PRODUCT` via its View Product link | The detail page shows that product's name                                   |
+| TC-11 | error | A visitor searches for a term no product name contains    | The "Searched Products" heading is shown with zero product cards            |
 
 ## Locator Notes
 
