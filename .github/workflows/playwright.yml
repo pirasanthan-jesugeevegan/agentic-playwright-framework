@@ -24,8 +24,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
         env:
-          APP_URL: https://automationexercise.com
-          API_URL: https://automationexercise.com/api
+          ENV: dev
           PW_WORKERS: 10
         run: pnpm exec playwright test
       - uses: actions/upload-artifact@v4
