@@ -1,10 +1,6 @@
-import { expect, test } from '../../../src/fixtures/base-test';
+import { expect, test } from '../../../src/fixtures/pom/test-options';
 
-/**
- * The fast, broad check: does each top-level page still load and show
- * its defining landmark. Nothing here depends on catalog data, so this
- * suite should never fail because the demo store's products changed.
- */
+/** Checks that each top-level page still loads and shows its defining landmark. */
 test.describe('Smoke', { tag: '@smoke' }, () => {
   test('TC-01: Verify that the user sees the header nav and featured items rail when the home page loads', async ({
     homePage,

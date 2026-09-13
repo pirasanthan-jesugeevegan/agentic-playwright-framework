@@ -1,4 +1,4 @@
-import { expect, test } from '../../../src/fixtures/base-test';
+import { expect, test } from '../../../src/fixtures/pom/test-options';
 import { KNOWN_PRODUCT, SEARCH_TERM } from '../../../src/data/catalog';
 
 test.describe('Products', { tag: '@regression' }, () => {
@@ -15,9 +15,7 @@ test.describe('Products', { tag: '@regression' }, () => {
 
     await test.step('THEN the page switches to a Searched Products result set', async () => {
       await expect(productsPage.searchedProductsHeading).toBeVisible();
-      // Deliberately not asserting an exact count: the demo catalog's
-      // contents drift over time, and a fixed number here would fail on
-      // that drift rather than on anything this suite actually owns.
+      // Not asserting an exact count - the demo catalog's contents drift over time.
       await expect(productsPage.productCards().first()).toBeVisible();
     });
   });

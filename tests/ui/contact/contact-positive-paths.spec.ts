@@ -1,4 +1,4 @@
-import { expect, test } from '../../../src/fixtures/base-test';
+import { expect, test } from '../../../src/fixtures/pom/test-options';
 import { generateContactMessage } from '../../../src/data/contact-message';
 
 test.describe('Contact us', { tag: '@regression' }, () => {

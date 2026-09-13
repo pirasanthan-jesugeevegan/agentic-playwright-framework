@@ -1,4 +1,4 @@
-import { expect, test } from '../../../src/fixtures/base-test';
+import { expect, test } from '../../../src/fixtures/pom/test-options';
 import { KNOWN_PRODUCT } from '../../../src/data/catalog';
 
 test.describe('Product detail', { tag: '@regression' }, () => {
