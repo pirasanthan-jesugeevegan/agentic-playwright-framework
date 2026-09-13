@@ -1,0 +1,85 @@
+{
+  "name": "pirasanth-portfolio-qa-suite-page",
+  "version": 1,
+  "consumer": "https://www.pirasanth.com/qa-suite",
+  "provider": "https://pirasanthan-jesugeevegan.github.io/agentic-playwright-framework/",
+  "providerRepository": "https://github.com/pirasanthan-jesugeevegan/agentic-playwright-framework",
+  "description": "What the portfolio's QA suite page reads out of the published Allure report and the sibling ai-diagnosis.json. Deliberately narrow: everything the page does not touch is free to change without warning.",
+  "documents": [
+    {
+      "path": "widgets/summary.json",
+      "required": true,
+      "usedFor": "the headline stat cards and whether the run came back clean",
+      "checks": [
+        { "field": "statistic.total", "type": "number", "min": 1 },
+        { "field": "statistic.passed", "type": "number" },
+        { "field": "statistic.failed", "type": "number" },
+        { "field": "statistic.broken", "type": "number" },
+        { "field": "time.duration", "type": "number", "min": 1 },
+        { "field": "time.stop", "type": "number", "min": 1 }
+      ]
+    },
+    {
+      "path": "data/suites.json",
+      "required": true,
+      "usedFor": "the suite tree, the console replay, the per-area split, and the slowest tests",
+      "checks": [
+        {
+          "kind": "leaves",
+          "minCount": 1,
+          "require": ["status", "time.duration", "time.start", "name"]
+        }
+      ]
+    },
+    {
+      "path": "widgets/environment.json",
+      "required": false,
+      "usedFor": "the environment card",
+      "checks": [
+        {
+          "kind": "arrayOf",
+          "minLength": 1,
+          "each": [{ "field": "name", "type": "string" }]
+        }
+      ]
+    },
+    {
+      "path": "widgets/history-trend.json",
+      "required": false,
+      "usedFor": "the run-history trend chart",
+      "checks": [
+        {
+          "kind": "arrayOf",
+          "minLength": 1,
+          "each": [{ "field": "data.total", "type": "number" }]
+        }
+      ]
+    },
+    {
+      "path": "widgets/duration-trend.json",
+      "required": false,
+      "usedFor": "the height of each bar in the run-history trend chart",
+      "checks": [
+        {
+          "kind": "arrayOf",
+          "minLength": 1,
+          "each": [{ "field": "data.duration", "type": "number" }]
+        }
+      ]
+    },
+    {
+      "path": "ai-diagnosis.json",
+      "required": false,
+      "usedFor": "the grouped AI root-cause/drift badges on failing suites",
+      "checks": [
+        {
+          "kind": "objectValues",
+          "each": [
+            { "field": "tests", "type": "array" },
+            { "field": "diagnosis", "type": "string" }
+          ]
+        }
+      ]
+    }
+  ]
+}

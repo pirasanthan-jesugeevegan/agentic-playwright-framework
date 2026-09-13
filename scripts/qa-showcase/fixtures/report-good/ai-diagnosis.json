@@ -1,0 +1,6 @@
+{
+  "api/account/account-schema-validation-paths.spec.ts": {
+    "tests": ["API-09", "API-10"],
+    "diagnosis": "The account-creation endpoint rejected the form-encoded POST with 403; API-10 failed only because it depends on API-09's account. This is undocumented drift: STATUS.md says Passing."
+  }
+}
