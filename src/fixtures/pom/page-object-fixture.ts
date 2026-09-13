@@ -1,11 +1,12 @@
-import { test as base } from './framework-fixtures';
+import { test as base } from '../framework-fixtures';
 import {
   CartPage,
   ContactPage,
   HomePage,
+  LoginPage,
   ProductDetailPage,
   ProductsPage,
-} from '../pages';
+} from '../../pages';
 
 export interface PageObjectFixtures {
   homePage: HomePage;
@@ -13,13 +14,12 @@ export interface PageObjectFixtures {
   productDetailPage: ProductDetailPage;
   cartPage: CartPage;
   contactPage: ContactPage;
+  loginPage: LoginPage;
 }
 
 /**
- * Dependency-injected page objects: a spec names the surfaces it touches
- * in its signature, e.g. `async ({ productsPage, cartPage }) => ...`, and
- * only those are constructed. Extends the framework's own `test` so the
- * authenticated-context fixture stays available alongside these.
+ * Page object fixtures. A spec only pays for the ones it destructures,
+ * e.g. `async ({ productsPage, cartPage }) => ...`.
  */
 export const test = base.extend<PageObjectFixtures>({
   homePage: async ({ page }, use) => {
@@ -36,6 +36,9 @@ export const test = base.extend<PageObjectFixtures>({
   },
   contactPage: async ({ page }, use) => {
     await use(new ContactPage(page));
+  },
+  loginPage: async ({ page }, use) => {
+    await use(new LoginPage(page));
   },
 });
 

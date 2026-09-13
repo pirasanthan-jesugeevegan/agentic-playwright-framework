@@ -6,14 +6,7 @@ export interface FrameworkFixtures {
   authenticatedPage: Page;
 }
 
-/**
- * The target ships real Google AdSense ads. Their iframes and anchor
- * overlays render on top of real controls (add-to-cart, form submit) and
- * intercept clicks, and their payload adds load time and layout reflow on
- * top of the page under test - neither is something under test here, so
- * both are eliminated at the network layer rather than papered over with
- * longer timeouts or `force: true` clicks.
- */
+/** Blocks ad iframes that intercept clicks and slow page loads. */
 const AD_HOSTS =
   /(doubleclick\.net|googlesyndication\.com|googleadservices\.com)/;
 
