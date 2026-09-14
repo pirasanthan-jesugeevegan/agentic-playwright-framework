@@ -80,6 +80,41 @@ test('groups failed and broken results by the suite label', () => {
   assert.equal(login.tests.length, 1);
 });
 
+test('dedupes the same test failing across multiple browser projects', () => {
+  const records = [
+    result({
+      name: 'TC-13',
+      status: 'failed',
+      message: 'error banner not visible',
+      trace: 'trace-chromium',
+      suite: 'ui/login/login-negative-paths.spec.ts',
+    }),
+    result({
+      name: 'TC-13',
+      status: 'failed',
+      message: 'error banner not visible',
+      trace: 'trace-firefox',
+      suite: 'ui/login/login-negative-paths.spec.ts',
+    }),
+    result({
+      name: 'TC-13',
+      status: 'failed',
+      message: 'error banner not visible',
+      trace: 'trace-webkit',
+      suite: 'ui/login/login-negative-paths.spec.ts',
+    }),
+  ];
+
+  const groups = groupFailures(records);
+
+  assert.equal(groups.length, 1);
+  assert.equal(groups[0].tests.length, 1);
+  assert.deepEqual(
+    groups[0].tests.map((t) => t.name),
+    ['TC-13'],
+  );
+});
+
 test('throws a clear error when a result has no suite label', () => {
   const bad = {
     name: 'X',

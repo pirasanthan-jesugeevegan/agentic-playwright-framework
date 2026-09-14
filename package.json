@@ -25,7 +25,8 @@
     "test:vr": "playwright test --project=visual-regression",
     "test:vr:update": "playwright test --project=visual-regression --update-snapshots",
     "report:allure:generate": "allure generate ./allure-results --clean -o ./allure-report",
-    "report:allure:open": "allure open ./allure-report"
+    "report:allure:open": "allure open ./allure-report",
+    "test:scripts": "node --test scripts/qa-showcase/*.test.mjs"
   },
   "repository": {
     "type": "git",

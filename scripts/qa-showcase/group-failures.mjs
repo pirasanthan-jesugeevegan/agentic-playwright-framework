@@ -4,6 +4,11 @@
  * suite — rather than emitting one diagnosis per test — is what lets a later
  * step notice a cascading failure (one root cause producing two different
  * symptoms) instead of surfacing two disconnected-looking diagnoses.
+ *
+ * The "suite" label is the spec file path, which is identical across every
+ * browser project (chromium, firefox, ...) for the same UI test. When one
+ * test fails on multiple projects in the same run, dedupe within a group by
+ * name + message so it appears once, not once per failing browser.
  */
 export function groupFailures(resultRecords) {
   const relevant = resultRecords.filter(
@@ -23,12 +28,18 @@ export function groupFailures(resultRecords) {
       suite: suiteLabel.value,
       tests: [],
     };
-    entry.tests.push({
-      name: record.name,
-      status: record.status,
-      message: record.statusDetails?.message ?? '',
-      trace: record.statusDetails?.trace ?? '',
-    });
+    const message = record.statusDetails?.message ?? '';
+    const isDuplicate = entry.tests.some(
+      (t) => t.name === record.name && t.message === message,
+    );
+    if (!isDuplicate) {
+      entry.tests.push({
+        name: record.name,
+        status: record.status,
+        message,
+        trace: record.statusDetails?.trace ?? '',
+      });
+    }
     bySuite.set(suiteLabel.value, entry);
   }
 

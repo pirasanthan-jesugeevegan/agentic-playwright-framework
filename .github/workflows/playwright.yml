@@ -33,6 +33,8 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
+      - name: Run qa-showcase script tests
+        run: pnpm run test:scripts
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
@@ -89,6 +91,7 @@ jobs:
           echo "The verifier passes a good report and rejects a drifted one."
 
       - name: Explain any failures with AI diagnosis
+        continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node scripts/qa-showcase/explain-failures.mjs --results-dir ./allure-results --status-md ./docs/STATUS.md --out ./allure-report/ai-diagnosis.json

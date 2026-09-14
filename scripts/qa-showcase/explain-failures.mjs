@@ -6,10 +6,9 @@
  * (Task 2's prompt). Writes ai-diagnosis.json as a SIBLING of the Allure
  * report — never injected into Allure's own report schema.
  *
- * Runs only when there is at least one failed/broken result; the CI step
- * that invokes this script is itself gated on that (see the workflow diff
- * in this plan's Task 5), but this script is also a no-op safely on its own
- * if given a clean run.
+ * This script is a safe no-op on a clean run (writes an empty
+ * ai-diagnosis.json); the CI step that invokes it runs unconditionally, not
+ * gated on failure count.
  */
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
