@@ -21,9 +21,9 @@ export function buildDiagnosisPrompt(group, statusMdText) {
     statusMdText,
     '```',
     '',
-    'Answer three things, concisely, in plain prose (no markdown headers):',
-    '1. Root cause: what actually broke, in one or two sentences.',
-    '2. Correlation: if there is more than one failing test above, do they share one root cause (a cascading failure), or are they independent? Say which.',
-    '3. Drift: does docs/STATUS.md already document this as a known issue for this suite, or does it claim this suite is "Passing" while the run just failed (undocumented drift)? Quote the relevant STATUS.md line if you find one.',
+    'Answer with exactly three lines of plain text, each starting with the literal label below followed by a colon, then your answer on the same line. Do not use any markdown formatting - no asterisks, no numbered list markers, no headers, no bullet points.',
+    'Root cause: what actually broke, in one or two sentences.',
+    'Correlation: if there is more than one failing test above, do they share one root cause (a cascading failure), or are they independent? Say which.',
+    'Drift: does docs/STATUS.md already document this as a known issue for this suite, or does it claim this suite is "Passing" while the run just failed (undocumented drift)? Quote the relevant STATUS.md line if you find one.',
   ].join('\n');
 }
