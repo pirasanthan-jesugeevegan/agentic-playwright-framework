@@ -35,6 +35,7 @@ pnpm test:smoke         # @smoke-tagged cases only
 | `pnpm test:vr`                                       | Visual-regression project only                                                |
 | `pnpm test:vr:update`                                | Regenerate VR baselines (Linux only - see the skill)                          |
 | `pnpm test:scripts`                                  | Unit tests for the CI showcase pipeline (`scripts/`)                          |
+| `pnpm check:status`                                  | Fails if `docs/STATUS.md` counts or caps drift from the real specs            |
 | `pnpm test:agent-evals`                              | Checks the 5 agents still follow the constitution (needs `ANTHROPIC_API_KEY`) |
 | `pnpm report:allure:generate` / `report:allure:open` | Build and view the Allure report locally                                      |
 
@@ -69,3 +70,8 @@ and `docs/vr-test-plans/`.
 - Allure reporting, published to GitHub Pages on every push to `main`/`master`
 - `@anthropic-ai/sdk` for the CI failure-diagnosis pipeline and the agent eval harness
 - ESLint + Prettier + Husky/lint-staged pre-commit
+- Dependabot keeps npm and GitHub Actions dependencies current
+
+## Contributing and license
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for setup and the rules a change is held to, and [`SECURITY.md`](./SECURITY.md) to report a vulnerability. Released under the [MIT License](./LICENSE).
