@@ -128,9 +128,20 @@ jobs:
       - name: Regenerate visual-regression baselines
         env:
           ENV: dev
+          PW_WORKERS: 10
         run: pnpm exec playwright test --project=visual-regression --update-snapshots
       - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
         with:
           name: vr-baselines
           path: tests/vr/**/*-snapshots/**/*.png
+          retention-days: 14
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: vr-baselines-debug-report
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 14
