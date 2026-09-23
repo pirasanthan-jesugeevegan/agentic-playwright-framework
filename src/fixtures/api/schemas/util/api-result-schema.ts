@@ -5,7 +5,7 @@ import { z } from 'zod';
  * real result in the response body's `responseCode` field. `createAccount`
  * called with the wrong HTTP method is the one exception (real HTTP 405).
  */
-export const apiResultSchema = z.object({
+export const apiResultSchema = z.strictObject({
   responseCode: z.number(),
   message: z.string(),
 });

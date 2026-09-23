@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const userDetailSchema = z.object({
+export const userDetailSchema = z.strictObject({
   id: z.number(),
   name: z.string(),
   email: z.string(),
@@ -20,7 +20,7 @@ export const userDetailSchema = z.object({
 });
 export type UserDetail = z.infer<typeof userDetailSchema>;
 
-export const getUserDetailResponseSchema = z.object({
+export const getUserDetailResponseSchema = z.strictObject({
   responseCode: z.number(),
   user: userDetailSchema,
 });

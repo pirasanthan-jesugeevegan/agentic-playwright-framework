@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-export const productSchema = z.object({
+export const productSchema = z.strictObject({
   id: z.number(),
   name: z.string(),
   price: z.string(),
   brand: z.string(),
-  category: z.object({
-    usertype: z.object({
+  category: z.strictObject({
+    usertype: z.strictObject({
       usertype: z.string(),
     }),
     category: z.string(),
@@ -14,7 +14,7 @@ export const productSchema = z.object({
 });
 export type Product = z.infer<typeof productSchema>;
 
-export const searchProductsResponseSchema = z.object({
+export const searchProductsResponseSchema = z.strictObject({
   responseCode: z.number(),
   products: z.array(productSchema),
 });
