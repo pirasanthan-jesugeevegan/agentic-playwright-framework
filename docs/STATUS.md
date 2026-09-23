@@ -43,25 +43,23 @@ Cap: 10 (same discipline as the other two suites - one state per case, a stated 
 was left out, no growth by default). Runs on the `visual-regression` project (Chromium only,
 1920x1080, `tests/vr/`), baselines committed under `tests/vr/<area>.vr.spec.ts-snapshots/`.
 
-| Area           | Plan                                                | Spec                        | Cases | Implemented | Baselines committed |
-| -------------- | --------------------------------------------------- | --------------------------- | ----- | ----------- | ------------------- |
-| Home           | `docs/vr-test-plans/home-vr-test-plan.md`           | `home.vr.spec.ts`           | 1     | 1           | Not yet - see below |
-| Products       | `docs/vr-test-plans/products-vr-test-plan.md`       | `products.vr.spec.ts`       | 2     | 2           | Not yet - see below |
-| Product detail | `docs/vr-test-plans/product-detail-vr-test-plan.md` | `product-detail.vr.spec.ts` | 2     | 2           | Not yet - see below |
-| Cart           | `docs/vr-test-plans/cart-vr-test-plan.md`           | `cart.vr.spec.ts`           | 3     | 3           | Not yet - see below |
-| Contact us     | `docs/vr-test-plans/contact-vr-test-plan.md`        | `contact.vr.spec.ts`        | 1     | 1           | Not yet - see below |
-| Login          | `docs/vr-test-plans/login-vr-test-plan.md`          | `login.vr.spec.ts`          | 1     | 1           | Not yet - see below |
+| Area           | Plan                                                | Spec                        | Cases | Implemented | Baselines committed  |
+| -------------- | --------------------------------------------------- | --------------------------- | ----- | ----------- | -------------------- |
+| Home           | `docs/vr-test-plans/home-vr-test-plan.md`           | `home.vr.spec.ts`           | 1     | 1           | Yes (linux + darwin) |
+| Products       | `docs/vr-test-plans/products-vr-test-plan.md`       | `products.vr.spec.ts`       | 2     | 2           | Yes (linux + darwin) |
+| Product detail | `docs/vr-test-plans/product-detail-vr-test-plan.md` | `product-detail.vr.spec.ts` | 2     | 2           | Yes (linux + darwin) |
+| Cart           | `docs/vr-test-plans/cart-vr-test-plan.md`           | `cart.vr.spec.ts`           | 3     | 3           | Yes (linux + darwin) |
+| Contact us     | `docs/vr-test-plans/contact-vr-test-plan.md`        | `contact.vr.spec.ts`        | 1     | 1           | Yes (linux + darwin) |
+| Login          | `docs/vr-test-plans/login-vr-test-plan.md`          | `login.vr.spec.ts`          | 1     | 1           | Yes (linux + darwin) |
 
 **Total: 10 / 10. Full.** Specs and locators are written and verified against the live DOM (every
 element's real dimensions and structure were inspected before a locator went into a page object -
 `#cartModal`/`#checkoutModal` turned out to be full-viewport dialog overlays, not the small
 boxes they looked like, so both captures are scoped to their inner `.modal-content` instead).
-**Baselines cannot be generated from this environment** - the sandbox this suite was authored in
-has no network path to automationexercise.com. Run `npx playwright test --project=visual-regression --update-snapshots`
-on a real machine (Linux, to match CI - see the skill's Baseline Management section) to produce
-them, review the PNGs once, then commit them. Until that happens, `visual-regression` will fail
-every run with "no baseline found," same as any freshly-written VR case before its first
-snapshot exists.
+Linux baselines (matching CI's `ubuntu-latest` runner) were generated via the
+`generate-vr-baselines` workflow_dispatch job and committed after a visual review of all 10 PNGs;
+darwin baselines (for local Mac development) were already committed alongside the specs. The
+`visual-regression` project is in the default CI matrix.
 
 ## Findings against the application
 
@@ -92,14 +90,6 @@ snapshot exists.
 
 ## Open decisions
 
-- Visual regression baselines still need generating before the `visual-regression` project will
-  pass - the specs, locators, and thresholds are done; only the reference PNGs are missing. The
-  mechanism now exists (`.github/workflows/playwright.yml`'s `generate-vr-baselines` job, run via
-  `workflow_dispatch` with `generate_vr_baselines: true`, Linux to match CI) but hasn't been run
-  yet. Until it has, `visual-regression` is deliberately left out of the default CI matrix (see
-  the comment in `playwright.yml`) so the badge and Allure report reflect real coverage rather
-  than a permanent "no baseline found" failure - add it back to the matrix once the PNGs from
-  that job are reviewed and committed.
 - `chromium-authenticated` currently has no spec targeting it at all (no test needs a logged-in
   session yet). It stays wired (auth setup, storage state) for when one does.
 - `staging`/`production` in `src/config/environments/` hold placeholder URLs, not real ones -
