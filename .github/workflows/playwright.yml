@@ -22,10 +22,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # visual-regression stays out of the default matrix until its baselines
-        # are generated and committed via generate-vr-baselines below - add
-        # 'visual-regression' back here once tests/vr/**/*.png exist.
-        project: [chromium, firefox, webkit, mobile-chrome, mobile-safari, api]
+        project:
+          [
+            chromium,
+            firefox,
+            webkit,
+            mobile-chrome,
+            mobile-safari,
+            api,
+            visual-regression,
+          ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -63,6 +69,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
+      issues: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -102,6 +109,12 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node scripts/qa-showcase/explain-failures.mjs --results-dir ./allure-results --status-md ./docs/STATUS.md --out ./allure-report/ai-diagnosis.json
 
+      - name: Sync the ci-failure tracking issue from the AI diagnosis
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/qa-showcase/sync-ci-issue.mjs --diagnosis ./allure-report/ai-diagnosis.json
+
       - name: Verify the report against the contract before publishing
         run: node scripts/qa-showcase/verify-contract.mjs --base ./allure-report
 
@@ -128,9 +141,20 @@ jobs:
       - name: Regenerate visual-regression baselines
         env:
           ENV: dev
+          PW_WORKERS: 10
         run: pnpm exec playwright test --project=visual-regression --update-snapshots
       - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
         with:
           name: vr-baselines
           path: tests/vr/**/*-snapshots/**/*.png
+          retention-days: 14
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: vr-baselines-debug-report
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 14

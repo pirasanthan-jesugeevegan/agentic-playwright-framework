@@ -1,0 +1,13 @@
+{
+  "agent": "playwright-test-reviewer",
+  "systemPromptPath": ".claude/agents/playwright-test-reviewer.md",
+  "scenario": "Reviewing a spec file that contains both an XPath locator and a waitForTimeout",
+  "input": "Review this file, tests/ui/cart/cart-positive-paths.spec.ts:\n\n```ts\nimport { test, expect } from '../../../src/fixtures/pom/test-options';\n\ntest.describe('Cart', { tag: '@regression' }, () => {\n  test('TC-20: Verify that the user can remove an item from the cart', async ({ page }) => {\n    await page.locator(\"xpath=//button[@class='remove-item']\").click();\n    await page.waitForTimeout(2000);\n    await expect(page.getByText('Cart is empty')).toBeVisible();\n  });\n});\n```",
+  "rubric": [
+    "Flags the XPath locator (xpath=//button[@class='remove-item']) as a violation",
+    "Flags the waitForTimeout(2000) as a violation",
+    "Cites the specific line each violation is on, not just \"this file has issues\"",
+    "Proposes the correct fix direction for at least one violation (e.g. a role/testId locator, or a web-first assertion instead of the timeout) without rewriting the whole file itself",
+    "Does not claim anything is wrong with the test title, the @regression tag, or the test-options import - those are correct in this snippet"
+  ]
+}
