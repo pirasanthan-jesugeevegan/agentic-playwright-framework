@@ -15,8 +15,20 @@ false positives from a rule matter more here than catching everything.
 """
 
 import json
+import os
 import re
 import sys
+
+
+def repo_relative(file_path, payload):
+    """Path relative to the project root, so the ^src/ ^tests/ rule patterns
+    match wherever the repo is checked out (a clone with another directory
+    name, or a git worktree). Anchoring on the directory name instead made
+    every rule silently skip outside a clone named exactly like the repo."""
+    root = (os.environ.get("CLAUDE_PROJECT_DIR") or payload.get("cwd") or "").rstrip("/")
+    if root and file_path.startswith(root + "/"):
+        return file_path[len(root) + 1 :]
+    return file_path
 
 
 def added_content(tool_name, tool_input):
@@ -145,11 +157,7 @@ def main():
     if tool_name not in ("Write", "Edit", "MultiEdit"):
         return 0
 
-    # Normalise to a repo-relative path for the rule patterns above.
-    rel_path = file_path
-    marker = "agentic-playwright-framework/"
-    if marker in rel_path:
-        rel_path = rel_path.split(marker, 1)[1]
+    rel_path = repo_relative(file_path, payload)
 
     content = added_content(tool_name, tool_input)
     if not content:

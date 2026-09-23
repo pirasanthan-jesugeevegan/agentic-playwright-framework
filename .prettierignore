@@ -4,3 +4,7 @@ test-results
 .auth
 coverage
 dist
+allure-report
+allure-results
+.superpowers
+.playwright-mcp
