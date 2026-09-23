@@ -145,7 +145,7 @@ jobs:
         with:
           path: allure-report
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   generate-vr-baselines:
     if: ${{ inputs.generate_vr_baselines }}
