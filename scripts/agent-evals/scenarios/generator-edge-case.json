@@ -1,0 +1,13 @@
+{
+  "agent": "playwright-test-generator",
+  "systemPromptPath": ".claude/agents/playwright-test-generator.md",
+  "scenario": "Asked to implement an edge-type case (TC-14, empty password) from an existing login plan",
+  "input": "Implement TC-14 from docs/test-plans/login-test-plan.md: 'Type: edge - A visitor attempts to sign in with KNOWN_ACCOUNT's email and an empty password field -> the form does not submit and a validation message is shown.' tests/ui/login/ currently has login-positive-paths.spec.ts (TC-12) and login-negative-paths.spec.ts (TC-13). Where does this case go, and what do you do before writing any locator?",
+  "rubric": [
+    "States the case goes into the existing login-negative-paths.spec.ts, not a new file, since Type is edge",
+    "States it must verify the relevant locators (password field, validation message) against the live DOM/MCP snapshot before writing them, not assume from memory",
+    "States the page object must expose the locator/action only and must not contain any expect() call - the assertion belongs in the spec",
+    "States the test title must start with 'TC-14: Verify that the user ...' framed as the outcome",
+    "States it will run pnpm validate (and the new spec) before handing the case back"
+  ]
+}

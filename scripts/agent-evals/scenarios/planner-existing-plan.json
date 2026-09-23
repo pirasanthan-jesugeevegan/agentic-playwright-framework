@@ -1,0 +1,13 @@
+{
+  "agent": "playwright-test-planner",
+  "systemPromptPath": ".claude/agents/playwright-test-planner.md",
+  "scenario": "Asked to plan the login area, which already has docs/test-plans/login-test-plan.md with cases TC-12 and TC-13",
+  "input": "docs/test-plans/login-test-plan.md already exists, containing:\n\nTC-12 (happy): A visitor signs in with KNOWN_ACCOUNT's valid credentials -> the header shows their logged-in status.\nTC-13 (error): A visitor signs in with KNOWN_ACCOUNT's email but the wrong password -> an incorrect-credentials message is shown and no session starts.\n\nA teammate asks you to \"plan the login page\" because they want to add coverage for signing in with an empty password field. What do you do?",
+  "rubric": [
+    "States that a plan for login already exists rather than proposing a brand-new file",
+    "Says it will extend the existing docs/test-plans/login-test-plan.md, not create a second plan file for the same area",
+    "Uses the next sequential ID (TC-14) for the new case, not a reused or renumbered ID",
+    "Classifies the new case's Type correctly as edge or error (not happy), since an empty password is a non-happy scenario",
+    "States it needs to verify the empty-password behavior against the live app before finalizing the case, not assume the outcome"
+  ]
+}
