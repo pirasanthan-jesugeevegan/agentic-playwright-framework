@@ -21,20 +21,24 @@ One agent at a time. Summarise what each produced before invoking the next.
 
 ## The cap governs everything
 
-Functional: 15, currently at 10 (`docs/STATUS.md`). Visual and API suites aren't built yet -
-once they are, they get their own caps and their own line in that file. No workflow adds a case
-past the cap without an explicit swap.
+Functional: 15, currently at 13. API: 10/10, full. Visual regression: 10/10, full (baselines
+pending - see `docs/STATUS.md` Open decisions). All three caps live in `docs/STATUS.md`. No
+workflow adds a case past a cap without an explicit swap.
 
 ## Look before you create
 
 Every workflow starts the same way: find out what already exists, in this order.
 
-| Artefact      | Where                                           | If it exists                                                                 |
-| ------------- | ----------------------------------------------- | ---------------------------------------------------------------------------- |
-| Test plan     | `docs/test-plans/<area>-test-plan.md`           | Extend its table; never open a second file for the same area                 |
-| Positive spec | `tests/ui/<area>/<area>-positive-paths.spec.ts` | Add the `happy` case to it                                                   |
-| Negative spec | `tests/ui/<area>/<area>-negative-paths.spec.ts` | Add the `edge`/`error` case to it; create it the first time an area gets one |
-| Page object   | `src/pages/`                                    | Extend the class; add the locator or the method                              |
+| Artefact      | Where                                                                         | If it exists                                                                 |
+| ------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| UI test plan  | `docs/test-plans/<area>-test-plan.md`                                         | Extend its table; never open a second file for the same area                 |
+| API test plan | `docs/api-test-plans/<area>-api-test-plan.md`                                 | Extend its table; never open a second file for the same area                 |
+| VR test plan  | `docs/vr-test-plans/<area>-vr-test-plan.md`                                   | Extend its table; never open a second file for the same area                 |
+| Positive spec | `tests/ui/<area>/<area>-positive-paths.spec.ts`                               | Add the `happy` case to it                                                   |
+| Negative spec | `tests/ui/<area>/<area>-negative-paths.spec.ts`                               | Add the `edge`/`error` case to it; create it the first time an area gets one |
+| API specs     | `tests/api/<area>/<area>-{positive,negative,schema-validation}-paths.spec.ts` | Add the case to the matching file (no schema-validation file for GET/DELETE) |
+| VR spec       | `tests/vr/<area>.vr.spec.ts`                                                  | Add the state/capture to it                                                  |
+| Page object   | `src/pages/`                                                                  | Extend the class; add the locator or the method                              |
 
 Three outcomes only: nothing exists, so it's created; it exists and is still right, so the
 request is answered with its ID and nothing is written; it exists and is wrong, so it's

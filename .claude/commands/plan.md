@@ -16,5 +16,5 @@ Requirements:
 - Write the plan to `docs/test-plans/<area>-test-plan.md` following
   `.claude/skills/playwright-pageobject-testing/references/test-plan-template.md`, including the
   "Out of Scope" section and confirmed accessible names.
-- Respect the cap. Functional is 15, currently at 10 (`docs/STATUS.md`). If the plan would push
+- Respect the cap. Functional is 15, currently at 13 (`docs/STATUS.md`). If the plan would push
   the suite past 15, say which existing case it should replace and why.
