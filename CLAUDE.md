@@ -14,13 +14,15 @@ What makes it _agentic_ rather than just automated: every change is written by a
 
 ## Commands
 
-| Command                                              | Purpose                                             |
-| ---------------------------------------------------- | --------------------------------------------------- |
-| `pnpm test`                                          | Run the full suite, every project                   |
-| `pnpm test:smoke`                                    | `@smoke`-tagged cases only                          |
-| `pnpm test:ui` / `test:headed` / `test:debug`        | Interactive runs                                    |
-| `pnpm validate`                                      | lint + format:check + typecheck - all must be clean |
-| `pnpm report:allure:generate` / `report:allure:open` | Build and view the Allure report locally            |
+| Command                                              | Purpose                                               |
+| ---------------------------------------------------- | ----------------------------------------------------- |
+| `pnpm test`                                          | Run the full suite, every project                     |
+| `pnpm test:smoke`                                    | `@smoke`-tagged cases only                            |
+| `pnpm test:ui` / `test:headed` / `test:debug`        | Interactive runs                                      |
+| `pnpm validate`                                      | lint + format:check + typecheck - all must be clean   |
+| `pnpm test:vr` / `test:vr:update`                    | Run / regenerate the visual-regression project        |
+| `pnpm check:status`                                  | `docs/STATUS.md` counts and caps match the real specs |
+| `pnpm report:allure:generate` / `report:allure:open` | Build and view the Allure report locally              |
 
 Live report: https://pirasanthan-jesugeevegan.github.io/agentic-playwright-framework/
 
@@ -71,6 +73,8 @@ These aren't suggestions - every change, human- or agent-authored, is checked ag
 - **Test titles state the outcome as a claim.** Every `test()` title starts with `Verify that the user` (`Verify that the API` reads fine for a purely API-facing case), optionally prefixed with the plan's case ID - `'TC-08: Verify that the user sees the cart return to its empty state after removing the only item'`. Not a mechanism description, not a fragment.
 - **Page objects don't assert.** They expose locators, actions, and readiness waits (`.waitFor()`); specs hold the `expect()`s. (`login-page.ts` used to break this - `login()` called `expect(...).toBeVisible()` internally; fixed to `.waitFor({ state: 'visible' })`, an example of exactly what the review/enforcement layers below exist to catch.)
 - **Test data is generated, not copy-pasted.** Anything unique per run (emails, messages) comes from `src/data/`; anything that mirrors real catalog state is a seed, dated and labelled as one, not a magic literal.
+- **State a test creates, the test removes.** Any test that creates persistent state on the live site (an account, an order) reverts it in `afterEach`/`afterAll`, and records what to clean up _before_ its first assertion, so a failing assertion can't leak it.
+- **No silent coverage drops.** When the app misbehaves, the case is not deleted and the assertion is not loosened: it's parked with `test.fixme()` and a `FIXME` naming the defect (see the flaky-test discipline below). Every planned case is implemented and passing, or `fixme`'d with the defect named.
 
 ## Flaky-test discipline
 
@@ -142,7 +146,7 @@ Below 5: no plan is proposed. The agent goes back and explores (reads the live D
 - A visual regression spec file (`tests/vr/**/*.spec.ts`) not named `<area>.vr.spec.ts`
 - A `test()` title that doesn't start with `Verify that`
 
-A hit blocks the write with an explanation on stderr; a clean write proceeds silently. This is a hard backstop under the prompt-level rules, not a replacement for the reviewer agent's judgment calls (coverage gaps, whether an assertion is meaningful) that a grep can't make.
+A hit blocks the write with an explanation on stderr; a clean write proceeds silently. The hook only sees an agent's tool calls, so the same rules (except the file-naming ones, which ESLint can't check) are also ESLint errors in `eslint.config.mjs` - `no-restricted-syntax`, `no-restricted-imports`, `playwright/valid-title`, `playwright/no-wait-for-timeout` - and CI's `validate` job runs `pnpm validate`, so a human edit or a `--no-verify` commit can't skip them. This is a hard backstop under the prompt-level rules, not a replacement for the reviewer agent's judgment calls (coverage gaps, whether an assertion is meaningful) that a grep can't make.
 
 ## Environment
 
