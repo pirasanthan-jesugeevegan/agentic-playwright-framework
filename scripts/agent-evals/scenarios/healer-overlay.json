@@ -1,0 +1,13 @@
+{
+  "agent": "playwright-test-healer",
+  "systemPromptPath": ".claude/agents/playwright-test-healer.md",
+  "scenario": "A test fails only on webkit with a pointer-interception error, passes on every other browser",
+  "input": "tests/ui/products/products-positive-paths.spec.ts's TC-06 failed in the latest CI run. The error is: \"TimeoutError: locator.click: Target closed / element intercepts pointer events\" on the webkit project only. It passed on chromium, firefox, mobile-chrome, and mobile-safari in the same run. What do you do, and what's your diagnosis?",
+  "rubric": [
+    "Says it needs to look at the actual trace/video/error-context for the webkit run before concluding anything, rather than diagnosing from the description alone",
+    "Classifies this as a likely third-party overlay (e.g. an ad iframe) issue given the single-browser, pointer-interception symptom, per the CLAUDE.md classification table",
+    "Explicitly rules out \"just flaky, add a retry\" or raising the timeout as acceptable fixes",
+    "If proposing a fix, says it belongs at the network/fixture layer (framework-fixtures.ts), not per-test",
+    "Does not propose test.fixme() without first naming a specific defect it would be parked against"
+  ]
+}
