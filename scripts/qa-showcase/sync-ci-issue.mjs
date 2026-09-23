@@ -22,6 +22,25 @@ function gh(args) {
   return execFileSync('gh', args, { encoding: 'utf8' }).trim();
 }
 
+/**
+ * `gh issue create --label` fails outright if the label doesn't already
+ * exist in the repo - it never creates one implicitly. `gh label create
+ * --force` creates-or-updates, so this is safe to call every time rather
+ * than checking existence first.
+ */
+function ensureLabelExists() {
+  gh([
+    'label',
+    'create',
+    LABEL,
+    '--color',
+    'd73a4a',
+    '--description',
+    'Auto-filed from a red CI run’s AI diagnosis (scripts/qa-showcase/sync-ci-issue.mjs)',
+    '--force',
+  ]);
+}
+
 function findOpenIssueNumber() {
   const out = gh([
     'issue',
@@ -67,6 +86,7 @@ function syncIssue(diagnosis, runUrl) {
       `Updated issue #${existing} (${suiteCount} suite(s) still red).`,
     );
   } else {
+    ensureLabelExists();
     const title = `CI failure: ${suiteCount} suite${suiteCount === 1 ? '' : 's'} red`;
     const url = gh([
       'issue',
