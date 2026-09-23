@@ -72,7 +72,9 @@ export const projects: Project[] = [
     // No browser device - API specs use Playwright's `request` fixture only.
     testDir: './tests/api',
     use: {
-      baseURL: config.apiUrl,
+      // Trailing slash so relative paths ('searchProduct') resolve under
+      // '/api' - without it new URL() replaces the last path segment.
+      baseURL: config.apiUrl.replace(/\/?$/, '/'),
     },
   },
 

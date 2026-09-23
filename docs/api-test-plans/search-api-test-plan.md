@@ -27,7 +27,7 @@ comes back as HTTP 200 with `responseCode: 400` / `405` inside it. Every test be
 
 | ID     | Type  | Scenario                                                 | Expected                                                                          |
 | ------ | ----- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| API-01 | happy | `POST /searchProduct` with `search_product: 'top'`       | `responseCode: 200`; every returned product's name contains "top"                 |
+| API-01 | happy | `POST /searchProduct` with `search_product: 'top'`       | `responseCode: 200`; every returned product's name or category contains "top"     |
 | API-02 | happy | `POST /searchProduct` with a term matching no product    | `responseCode: 200`; `products` is an empty array                                 |
 | API-03 | error | `POST /searchProduct` with no `search_product` parameter | `responseCode: 400`; message says the parameter is missing                        |
 | API-04 | error | `GET /searchProduct` (wrong method)                      | `responseCode: 405`; message says the method is not supported                     |

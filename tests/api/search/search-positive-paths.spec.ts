@@ -19,9 +19,12 @@ test.describe('Search API', { tag: '@regression' }, () => {
     expect(parsed).toBeTruthy();
     expect(parsed.responseCode).toBe(200);
     expect(parsed.products.length).toBeGreaterThan(0);
+    // The API matches on name or category ("Tops & Shirts"), not name alone.
     expect(
-      parsed.products.every((product) =>
-        product.name.toLowerCase().includes('top'),
+      parsed.products.every(
+        (product) =>
+          product.name.toLowerCase().includes('top') ||
+          product.category.category.toLowerCase().includes('top'),
       ),
     ).toBe(true);
   });

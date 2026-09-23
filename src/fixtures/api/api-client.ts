@@ -13,6 +13,12 @@ export async function apiRequest<T = unknown>({
 }: ApiRequestParams & { request: APIRequestContext }): Promise<
   ApiRequestResponse<T>
 > {
+  // Playwright resolves `url` against baseURL with `new URL()`, so a leading
+  // slash discards the baseURL's path ('/api') and the request lands on the
+  // website root instead of the API. Callers write '/searchProduct'; make it
+  // relative so it resolves under the (trailing-slashed) baseURL.
+  const path = url.replace(/^\/+/, '');
+
   const options: {
     form?: Record<string, string | number | boolean>;
     params?: Record<string, string | number | boolean>;
@@ -25,16 +31,16 @@ export async function apiRequest<T = unknown>({
   let response: APIResponse;
   switch (method) {
     case 'POST':
-      response = await request.post(url, options);
+      response = await request.post(path, options);
       break;
     case 'GET':
-      response = await request.get(url, options);
+      response = await request.get(path, options);
       break;
     case 'PUT':
-      response = await request.put(url, options);
+      response = await request.put(path, options);
       break;
     case 'DELETE':
-      response = await request.delete(url, options);
+      response = await request.delete(path, options);
       break;
   }
 
