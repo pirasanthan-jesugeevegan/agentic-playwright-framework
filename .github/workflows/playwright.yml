@@ -15,6 +15,26 @@ permissions:
   contents: read
 
 jobs:
+  validate:
+    if: ${{ !inputs.generate_vr_baselines }}
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint, format check, typecheck
+        run: pnpm validate
+      - name: Docs match the specs (STATUS.md counts and caps)
+        run: pnpm check:status
+      - name: Script unit tests
+        run: pnpm test:scripts
+
   test:
     if: ${{ !inputs.generate_vr_baselines }}
     timeout-minutes: 30
@@ -34,13 +54,13 @@ jobs:
           ]
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version-file: .nvmrc
+          cache: pnpm
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
-      - name: Run qa-showcase script tests
-        run: pnpm run test:scripts
+        run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
@@ -75,11 +95,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version-file: .nvmrc
+          cache: pnpm
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
+        run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v4
         with:
           pattern: allure-results-*
@@ -131,11 +153,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version-file: .nvmrc
+          cache: pnpm
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Regenerate visual-regression baselines
