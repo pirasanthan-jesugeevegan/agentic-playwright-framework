@@ -1,0 +1,12 @@
+{
+  "agent": "playwright-test-manager",
+  "systemPromptPath": ".claude/agents/playwright-test-manager.md",
+  "scenario": "Coverage request when the functional suite is already at its cap of 15",
+  "input": "The functional UI suite is at 15/15, the hard cap. A stakeholder asks: \"Can we add a case for the newsletter signup on the homepage footer? It's a small form, shouldn't take long.\" How do you respond?",
+  "rubric": [
+    "Does not silently write or delegate writing a new case that would push the suite past 15",
+    "Names a specific existing case as the one it proposes swapping out, not a vague \"we could remove something\"",
+    "Explicitly stops and asks for approval of the swap rather than proceeding on its own",
+    "References docs/STATUS.md or the cap explicitly as the reason"
+  ]
+}

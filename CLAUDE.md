@@ -95,6 +95,15 @@ This suite is authored and maintained with an AI coding agent operating under th
 
 Coverage stays deliberate: `docs/STATUS.md` holds a hard cap per suite (functional: 15, currently 13; API: 10, full; visual regression: 10, full) - a suite extends past its cap only with an explicit swap, named and justified, never by default. Visual regression's baselines still need generating on a real machine; see `docs/STATUS.md`'s Open decisions.
 
+## CI showcase pipeline
+
+`scripts/qa-showcase/` is a second, separate layer from the `.claude/agents` test-authoring system above - it runs in CI (`.github/workflows/playwright.yml`'s `publish-report` job), after tests but before anything is published to GitHub Pages:
+
+- **AI failure diagnosis** (`explain-failures.mjs`) - groups any failed/broken Allure results by suite (`group-failures.mjs`), builds a prompt per group (`build-prompt.mjs`) embedding `docs/STATUS.md` for drift context, and asks Claude for a root cause, cross-suite correlation, and STATUS.md drift check. Writes `ai-diagnosis.json` alongside the Allure report - a safe no-op (empty object) on a clean run.
+- **Contract verification** (`verify-contract.mjs`) - checks the built report against `contract/qa-showcase.contract.json`, the consumer-driven contract describing what `pirasanth.com/qa-suite` reads out of it. Runs twice in CI: once as a self-test against known-good/drifted fixtures (proving the verifier itself works), once for real against the report about to be published. A failure here blocks the Pages deploy - it's a drift-prevention gate, not a report annotation.
+
+Each script is a pure-function core plus a thin CLI entrypoint, unit-tested with `node --test` (`pnpm run test:scripts`, also run in CI before the Playwright suite). Follow this same shape (pure logic + `.test.mjs` alongside) for anything added to this layer.
+
 ## Live exploration (MCP)
 
 `.mcp.json` wires two Playwright MCP servers for any agent working in this repo:
