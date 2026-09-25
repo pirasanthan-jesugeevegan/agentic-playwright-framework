@@ -1,4 +1,4 @@
-import { test as setup } from '@playwright/test';
+import { expect, test as setup } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { LoginPage } from '../src/pages/login-page';
@@ -11,5 +11,6 @@ setup('authenticate', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.open();
   await loginPage.login(KNOWN_ACCOUNT.email, KNOWN_ACCOUNT.password);
+  await expect(loginPage.loggedInAs).toBeVisible();
   await page.context().storageState({ path: authFile });
 });

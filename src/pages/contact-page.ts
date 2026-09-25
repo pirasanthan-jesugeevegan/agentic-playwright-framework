@@ -33,7 +33,7 @@ export class ContactPage extends BaseAppPage {
     await this.goto('/contact_us');
   }
 
-  async fill(details: ContactMessage): Promise<void> {
+  async fillForm(details: ContactMessage): Promise<void> {
     await this.nameInput.fill(details.name);
     await this.emailInput.fill(details.email);
     await this.subjectInput.fill(details.subject);
