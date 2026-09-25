@@ -48,3 +48,28 @@ test('returns an empty object when there are no failing groups', async () => {
   });
   assert.deepEqual(result, {});
 });
+
+test('passes the diff to every group prompt so each diagnosis can see the change', async () => {
+  const groups = [
+    {
+      suite: 'a.spec.ts',
+      tests: [{ name: 'T1', status: 'failed', message: 'm', trace: 't' }],
+    },
+    {
+      suite: 'b.spec.ts',
+      tests: [{ name: 'T2', status: 'failed', message: 'm', trace: 't' }],
+    },
+  ];
+  const prompts = [];
+
+  await diagnoseGroups(groups, '# Suite Status\n', {
+    callClaude: async (prompt) => {
+      prompts.push(prompt);
+      return 'd';
+    },
+    diffText: '+  password: changed',
+  });
+
+  assert.equal(prompts.length, 2);
+  for (const p of prompts) assert.match(p, /password: changed/);
+});
