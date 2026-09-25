@@ -95,6 +95,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v7
         with:
@@ -125,11 +127,25 @@ jobs:
           fi
           echo "The verifier passes a good report and rejects a drifted one."
 
+      - name: Collect the change under test
+        continue-on-error: true
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          # The push's own range, so the diagnosis sees every commit that triggered
+          # this run. Fall back to the last commit for a manual dispatch, a first
+          # push, or a force-push whose old tip is no longer in the history.
+          if [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            BEFORE=HEAD~1
+          fi
+          git diff "$BEFORE" HEAD -- . ':(exclude)pnpm-lock.yaml' ':(exclude)*.png' > changes.diff || : > changes.diff
+          echo "Change under test: $(wc -l < changes.diff) diff lines since $BEFORE"
+
       - name: Explain any failures with AI diagnosis
         continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/qa-showcase/explain-failures.mjs --results-dir ./allure-results --status-md ./docs/STATUS.md --out ./allure-report/ai-diagnosis.json
+        run: node scripts/qa-showcase/explain-failures.mjs --results-dir ./allure-results --status-md ./docs/STATUS.md --diff-file ./changes.diff --out ./allure-report/ai-diagnosis.json
 
       - name: Sync the ci-failure tracking issue from the AI diagnosis
         continue-on-error: true

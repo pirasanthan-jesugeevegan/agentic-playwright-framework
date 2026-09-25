@@ -14,12 +14,20 @@ import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import Anthropic from '@anthropic-ai/sdk';
 import { groupFailures } from './group-failures.mjs';
-import { buildDiagnosisPrompt } from './build-prompt.mjs';
+import { buildDiagnosisPrompt, truncateDiff } from './build-prompt.mjs';
 
-export async function diagnoseGroups(groups, statusMdText, { callClaude }) {
+// Enough for a normal commit's diff; a bigger one is cut (and labelled) rather
+// than repeated in full in the prompt of every failing suite.
+const MAX_DIFF_CHARS = 12000;
+
+export async function diagnoseGroups(
+  groups,
+  statusMdText,
+  { callClaude, diffText = '' },
+) {
   const out = {};
   for (const group of groups) {
-    const prompt = buildDiagnosisPrompt(group, statusMdText);
+    const prompt = buildDiagnosisPrompt(group, statusMdText, diffText);
     const diagnosis = await callClaude(prompt);
     out[group.suite] = { tests: group.tests.map((t) => t.name), diagnosis };
   }
@@ -36,6 +44,17 @@ async function readAllureResults(resultsDir) {
     ),
   );
   return records;
+}
+
+/** The diff is optional context: a missing file (e.g. a local run) means no diff. */
+async function readDiff(diffPath) {
+  if (!diffPath) return '';
+  try {
+    return truncateDiff(await readFile(diffPath, 'utf8'), MAX_DIFF_CHARS);
+  } catch (err) {
+    if (err.code === 'ENOENT') return '';
+    throw err;
+  }
 }
 
 async function realCallClaude(client, prompt) {
@@ -58,6 +77,7 @@ async function main() {
   const resultsDir = flag('--results-dir', './allure-results');
   const statusMdPath = flag('--status-md', './docs/STATUS.md');
   const outPath = flag('--out', './allure-report/ai-diagnosis.json');
+  const diffPath = flag('--diff-file', '');
 
   const [records, statusMdText] = await Promise.all([
     readAllureResults(resultsDir),
@@ -76,6 +96,7 @@ async function main() {
   const client = new Anthropic();
   const diagnosis = await diagnoseGroups(groups, statusMdText, {
     callClaude: (prompt) => realCallClaude(client, prompt),
+    diffText: await readDiff(diffPath),
   });
 
   await writeFile(outPath, JSON.stringify(diagnosis, null, 2));
