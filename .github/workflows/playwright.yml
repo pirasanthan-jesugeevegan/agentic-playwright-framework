@@ -68,13 +68,13 @@ jobs:
           ENV: dev
           PW_WORKERS: 10
         run: pnpm exec playwright test --project=${{ matrix.project }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ matrix.project }}
           path: playwright-report/
           retention-days: 30
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: allure-results-${{ matrix.project }}
@@ -167,14 +167,14 @@ jobs:
           ENV: dev
           PW_WORKERS: 10
         run: pnpm exec playwright test --project=visual-regression --update-snapshots
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: vr-baselines
           path: tests/vr/**/*-snapshots/**/*.png
           retention-days: 14
           if-no-files-found: ignore
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: vr-baselines-debug-report
